@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Resources:
+  DynamoDBLambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: org.ipo.fetch.db.QueryDynamoDBHandler::handleRequest
+      Runtime: java17
+      CodeUri: target/fetch-data-1.0-SNAPSHOT.jar
+      MemorySize: 512
+      Timeout: 10
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action:
+                - 'dynamodb:GetItem'
+              Resource: 'arn:aws:dynamodb:ap-south-1:123456789012:table/YourTableName'
