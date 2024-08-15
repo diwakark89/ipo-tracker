@@ -26,13 +26,20 @@ public class QueryDynamoDBHandler implements RequestHandler<Object, Object> {
 
     @Override
     public Object handleRequest(Object input, Context context) {
-        LambdaLogger logger = context.getLogger();
-        logger.log("Received input: " + input);
+        if (tableName == null || tableName.isEmpty()) {
+            throw new IllegalArgumentException("table name must not be null or empty");
+        }
+        try {
+            LambdaLogger logger = context.getLogger();
+            logger.log("Received input: " + input);
 
-        if (input instanceof APIGatewayProxyRequestEvent requestEvent) {
-            return handleApiGatewayRequest(requestEvent, context);
-        } else {
-            return handleDirectInvocation(input, context);
+            if (input instanceof APIGatewayProxyRequestEvent requestEvent) {
+                return handleApiGatewayRequest(requestEvent, context);
+            } else {
+                return handleDirectInvocation(input, context);
+            }
+        }catch (Exception e) {
+            throw new RuntimeException("Error querying DynamoDB", e);
         }
     }
 
