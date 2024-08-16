@@ -14,7 +14,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ipo.fetch.model.InputModel;
 
-public class QueryDynamoDBHandler implements RequestHandler<Object, Object> {
+public class QueryDynamoDBHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent>{
 
     private final DynamoDB dynamoDB;
     private final String tableName = System.getenv("TABLE_NAME");
@@ -25,26 +25,10 @@ public class QueryDynamoDBHandler implements RequestHandler<Object, Object> {
     }
 
     @Override
-    public Object handleRequest(Object input, Context context) {
-        if (tableName == null || tableName.isEmpty()) {
-            throw new IllegalArgumentException("table name must not be null or empty");
-        }
-        try {
-            LambdaLogger logger = context.getLogger();
-            logger.log("Received input: " + input);
-
-            if (input instanceof APIGatewayProxyRequestEvent requestEvent) {
-                return handleApiGatewayRequest(requestEvent, context);
-            } else {
-                return handleDirectInvocation(input, context);
-            }
-        }catch (Exception e) {
-            throw new RuntimeException("Error querying DynamoDB", e);
-        }
-    }
-
-    private APIGatewayProxyResponseEvent handleApiGatewayRequest(APIGatewayProxyRequestEvent event, Context context) {
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent event, Context context) {
         LambdaLogger logger = context.getLogger();
+        logger.log("Received event: " + event);
+
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -73,34 +57,6 @@ public class QueryDynamoDBHandler implements RequestHandler<Object, Object> {
         } catch (Exception e) {
             logger.log("Error querying DynamoDB: " + e.getMessage());
             return response.withStatusCode(500).withBody("Error querying DynamoDB");
-        }
-    }
-
-    private String handleDirectInvocation(Object input, Context context) {
-        LambdaLogger logger = context.getLogger();
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            InputModel inputModel = objectMapper.convertValue(input, InputModel.class);
-            String key = inputModel.getKey();
-
-            if (key == null || key.isEmpty()) {
-                return "Error: Missing key in input";
-            }
-
-            Table table = dynamoDB.getTable(tableName);
-
-            GetItemSpec spec = new GetItemSpec().withPrimaryKey("key", key);
-            logger.log("GetItemSpec: " + spec);
-
-            Item item = table.getItem(spec);
-            logger.log("Item: " + item);
-
-            return item != null ? item.toJSON() : "{}";
-
-        } catch (Exception e) {
-            logger.log("Error querying DynamoDB: " + e.getMessage());
-            throw new RuntimeException("Error querying DynamoDB", e);
         }
     }
 }
