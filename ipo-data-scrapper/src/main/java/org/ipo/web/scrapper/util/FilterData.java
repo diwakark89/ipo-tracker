@@ -1,6 +1,6 @@
-package org.ipo.scrapper.scrapper.util;
+package org.ipo.web.scrapper.util;
 
-import org.ipo.scrapper.scrapper.model.IPOTableData;
+import org.ipo.web.scrapper.model.IPOTableData;
 
 public class FilterData {
     public boolean shouldItBeAdded(IPOTableData data){

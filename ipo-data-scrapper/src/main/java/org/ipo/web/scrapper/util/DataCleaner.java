@@ -1,4 +1,4 @@
-package org.ipo.scrapper.scrapper.util;
+package org.ipo.web.scrapper.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

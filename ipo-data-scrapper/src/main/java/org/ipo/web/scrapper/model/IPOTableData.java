@@ -1,4 +1,4 @@
-package org.ipo.scrapper.scrapper.model;
+package org.ipo.web.scrapper.model;
 
 import java.util.Objects;
 

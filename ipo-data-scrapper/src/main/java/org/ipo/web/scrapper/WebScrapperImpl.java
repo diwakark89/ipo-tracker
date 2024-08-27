@@ -1,8 +1,8 @@
-package org.ipo.scrapper.scrapper;
+package org.ipo.web.scrapper;
 
-import org.ipo.scrapper.scrapper.model.IPOTableData;
-import org.ipo.scrapper.scrapper.util.DataCleaner;
-import org.ipo.scrapper.scrapper.util.FilterData;
+import org.ipo.web.scrapper.model.IPOTableData;
+import org.ipo.web.scrapper.util.DataCleaner;
+import org.ipo.web.scrapper.util.FilterData;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,8 +16,7 @@ import java.util.List;
 
 public class WebScrapperImpl implements WebScrapper{
 
-    private static final String WEBSITE_CURRENT_URL="https://www.investorgain.com/report/live-ipo-gmp/331/current/";
-    private static final String WEBSITE_CLOSE_URL="https://www.investorgain.com/report/live-ipo-gmp/331/close/";
+
     private static final Logger LOG = LoggerFactory.getLogger(WebScrapperImpl.class);
 
     private final DataCleaner dataCleaner;
@@ -29,7 +28,7 @@ public class WebScrapperImpl implements WebScrapper{
     }
 
     @Override
-    public List<IPOTableData> tableScrap(String url) {
+    public List<IPOTableData> tableScrap(String url, String status) {
         List<IPOTableData> dataList=new ArrayList<>();
         try {
 
@@ -55,6 +54,7 @@ public class WebScrapperImpl implements WebScrapper{
                 }
                 if(filterData.shouldItBeAdded(data)){
                     dataList.add(data);
+                    data.setStatus(status);
                 }
 
                 LOG.info(data.toString());
@@ -81,9 +81,6 @@ public class WebScrapperImpl implements WebScrapper{
             case 3:
                 data.setEstListing(dataCleaner.cleanData(i, new StringBuilder(element.text())));
                 break;
-            case 4:
-
-                break;
             case 5:
                 data.setIpoSize(dataCleaner.cleanData(i, new StringBuilder(element.text())));
                 break;
@@ -102,8 +99,7 @@ public class WebScrapperImpl implements WebScrapper{
             case 10:
                 data.setListingDate(dataCleaner.cleanData(i, new StringBuilder(element.text())));
                 break;
-            case 11:
-
+            case 4,11:
                 break;
             default:
                 LOG.info("Exceed the Range fix it");
@@ -111,10 +107,4 @@ public class WebScrapperImpl implements WebScrapper{
         }
     }
 
-    public static void main(String[]args){
-        DataCleaner dataCleaner=new DataCleaner();
-        FilterData filterData=new FilterData();
-        WebScrapper scrapper=new WebScrapperImpl(dataCleaner,filterData);
-        scrapper.tableScrap(WEBSITE_CURRENT_URL);
-    }
 }

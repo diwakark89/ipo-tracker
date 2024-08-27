@@ -1,4 +1,4 @@
-package org.ipo.scrapper.db;
+package org.ipo.web.db;
 
 
 public class DBStorage {
