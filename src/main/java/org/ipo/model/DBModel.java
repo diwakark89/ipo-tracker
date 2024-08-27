@@ -1,14 +1,14 @@
-package org.ipo.fetch.model;
+package org.ipo.model;
 
-public class IPOResponse {
+public class DBModel {
     private String ipoId;
     private String status;
     private String ipoName;
-    private int listingPrice;
+    private int price;
     private int gmp;
     private int estListing;
     private double ipoSize;
-    private int lotSize;
+    private int lot;
     private String openDt;
     private String closeDt;
     private String boaDate;

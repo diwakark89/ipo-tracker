@@ -1,8 +1,8 @@
-package org.ipo.scrapper;
+package org.ipo.scrapper.scrapper;
 
-import org.ipo.scrapper.model.IPOTableData;
-import org.ipo.scrapper.util.DataCleaner;
-import org.ipo.scrapper.util.FilterData;
+import org.ipo.scrapper.scrapper.model.IPOTableData;
+import org.ipo.scrapper.scrapper.util.DataCleaner;
+import org.ipo.scrapper.scrapper.util.FilterData;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

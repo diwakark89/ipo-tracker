@@ -1,6 +1,5 @@
-package org.ipo.scrapper.util;
+package org.ipo.scrapper.scrapper.util;
 
-import org.ipo.scrapper.model.IPOTableData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
