@@ -2,7 +2,9 @@ package org.ipo.scrapper;
 
 import org.ipo.scrapper.model.IPOTableData;
 
+import java.util.List;
+
 public interface WebScrapper {
-    IPOTableData tableScrap(String url);
+    List<IPOTableData> tableScrap(String url);
 
 }
