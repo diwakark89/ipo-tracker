@@ -1,5 +1,6 @@
 package org.ipo.model;
 
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
@@ -21,6 +22,7 @@ public class DBModel {
     private String listingDate;
 
     @DynamoDbPartitionKey
+    @DynamoDbAttribute("ipoId")
     public String getIpoId() {
         return ipoId;
     }
@@ -29,7 +31,6 @@ public class DBModel {
         this.ipoId = ipoId;
     }
 
-    @DynamoDbSortKey
     public String getStatus() {
         return status;
     }
@@ -38,6 +39,7 @@ public class DBModel {
         this.status = status;
     }
 
+    @DynamoDbSortKey
     public String getIpoName() {
         return ipoName;
     }

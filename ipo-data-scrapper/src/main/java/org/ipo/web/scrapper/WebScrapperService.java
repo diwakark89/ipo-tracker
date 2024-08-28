@@ -1,8 +1,11 @@
 package org.ipo.web.scrapper;
 
 import org.ipo.web.constant.IPOStatus;
+import org.ipo.web.scrapper.model.IPOTableData;
 import org.ipo.web.scrapper.util.DataCleaner;
 import org.ipo.web.scrapper.util.FilterData;
+
+import java.util.List;
 
 public class WebScrapperService {
 
@@ -22,12 +25,14 @@ public class WebScrapperService {
 
     public static void main(String[]args){
         WebScrapperService webScrapperService=new WebScrapperService();
-
-
     }
 
-    public void scrapData(){
-        scrapper.tableScrap(WEBSITE_CURRENT_URL, IPOStatus.CURRENT.name());
+
+    public void scrapData(String ipoStatus){
+        IPOStatus status= IPOStatus.fromString(ipoStatus);
+
+        List<IPOTableData> ipoList = scrapper.tableScrap(getURL(status), status.name());
+
     }
 
     private String getURL(IPOStatus ipoStatus){
