@@ -59,11 +59,11 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
         LambdaLogger logger = context.getLogger();
 
         List<IPOTableData> ipoList = scrapper.tableScrap(getURL(status), status.name());
-        logger.log("Data found" + ipoList.size());
+        logger.log("Data found: " + ipoList.size());
         List<IPOData> ipoData = transformer.convertScrapToDBData(ipoList);
-        logger.log("Data Transformed");
+        logger.log("Data Transformed ");
         dbStorage.saveDataToDB(ipoData);
-        logger.log("Data Stored");
+        logger.log("Data Stored ");
     }
 
     private String getURL(IPOStatus ipoStatus) {

@@ -8,20 +8,20 @@ import java.util.List;
 
 public class DataTransformer {
     public IPOData convertScrapToDBData(IPOTableData data){
-        IPOData IPOData =new IPOData();
+        IPOData ipoData =new IPOData();
 
-        IPOData.setIpoName(data.getIpoName());
-        IPOData.setPrice(Integer.parseInt(data.getPrice()));
-        IPOData.setGmp(Integer.parseInt(data.getGmp()));
-        IPOData.setEstListing(Integer.parseInt(data.getEstListing()));
-        IPOData.setLot(Integer.parseInt(data.getLot()));
-        IPOData.setOpenDt(data.getOpenDt());
-        IPOData.setCloseDt(data.getCloseDt());
-        IPOData.setBoaDate(data.getBoaDate());
-        IPOData.setListingDate(data.getListingDate());
+        ipoData.setIpoName(data.getIpoName());
+        ipoData.setPrice(Integer.parseInt(data.getPrice()));
+        ipoData.setGmp(Integer.parseInt(data.getGmp()));
+        ipoData.setEstListing(Integer.parseInt(data.getEstListing()));
+        ipoData.setLot(Integer.parseInt(data.getLot()));
+        ipoData.setOpenDt(data.getOpenDt());
+        ipoData.setCloseDt(data.getCloseDt());
+        ipoData.setBoaDate(data.getBoaDate());
+        ipoData.setListingDate(data.getListingDate());
 
 
-        return IPOData;
+        return ipoData;
     }
 
     public List<IPOData> convertScrapToDBData(List<IPOTableData> dataList){
