@@ -1,34 +1,36 @@
 package org.ipo.web.db;
 
+import org.ipo.db.DynamoDBFactory;
 import org.ipo.model.IPOData;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.DynamoDbException;
+
+import java.util.List;
 
 public class DBStorage {
     private final DynamoDbEnhancedClient enhancedClient;
+    private final DynamoDbTable<IPOData> ipoData;
 
     public DBStorage() {
-        Region region = Region.AP_SOUTH_1;
-        DynamoDbClient ddb = DynamoDbClient.builder()
-                .region(region)
-                .build();
-
-        enhancedClient = DynamoDbEnhancedClient.builder()
-                .dynamoDbClient(ddb)
-                .build();
+        enhancedClient = DynamoDBFactory.getEnhancedClient();
+        ipoData = enhancedClient.table("IPOData", TableSchema.fromBean(IPOData.class));
     }
 
-    public void saveDataToDB(IPOData dbData) {
+    public void saveDataToDB(IPOData dbData) throws DynamoDbException {
         try {
-            DynamoDbTable<IPOData> ipoData = enhancedClient.table("IPOData", TableSchema.fromBean(IPOData.class));
             ipoData.putItem(dbData);
         } catch (DynamoDbException e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
+            throw new RuntimeException("Exception occurred while saving data "+e.getMessage());
+        }
+    }
+
+    public void saveDataToDB(List<IPOData> dbDataList) throws DynamoDbException {
+        try {
+            dbDataList.forEach(this::saveDataToDB);
+        } catch (DynamoDbException e) {
+            throw new RuntimeException("Exception occurred while saving data "+e.getMessage());
         }
     }
 }

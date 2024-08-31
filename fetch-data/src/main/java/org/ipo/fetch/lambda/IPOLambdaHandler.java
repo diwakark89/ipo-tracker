@@ -9,14 +9,15 @@ import org.ipo.fetch.repository.IPORepository;
 
 public class IPOLambdaHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
-    private final IPORepository IPORepository;
+    private final IPORepository repository;
+
     public IPOLambdaHandler(){
-        this.IPORepository = new IPORepository();
+        this.repository = new IPORepository();
         DynamoDBFactory.initClient();
     }
 
     @Override
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
-        return IPORepository.getData(requestEvent,context);
+        return repository.getData(requestEvent,context);
     }
 }

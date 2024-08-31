@@ -21,6 +21,7 @@ public class WebScrapperImpl implements WebScrapper{
 
     private final DataCleaner dataCleaner;
     private final FilterData filterData;
+
     public WebScrapperImpl(DataCleaner dataCleaner, FilterData filterData){
 
         this.dataCleaner = dataCleaner;

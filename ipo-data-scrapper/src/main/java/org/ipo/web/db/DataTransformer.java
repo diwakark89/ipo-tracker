@@ -4,6 +4,8 @@ package org.ipo.web.db;
 import org.ipo.model.IPOData;
 import org.ipo.web.scrapper.model.IPOTableData;
 
+import java.util.List;
+
 public class DataTransformer {
     public IPOData convertScrapToDBData(IPOTableData data){
         IPOData IPOData =new IPOData();
@@ -20,6 +22,10 @@ public class DataTransformer {
 
 
         return IPOData;
+    }
+
+    public List<IPOData> convertScrapToDBData(List<IPOTableData> dataList){
+        return dataList.stream().map(this::convertScrapToDBData).toList();
     }
 
 }

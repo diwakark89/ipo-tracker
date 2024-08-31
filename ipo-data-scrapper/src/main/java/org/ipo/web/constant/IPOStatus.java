@@ -9,7 +9,7 @@ public enum IPOStatus {
     CLOSED("Closed"),
     LISTED("Listed");
 
-    String status;
+    final String status;
 
     IPOStatus(String status){
         this.status=status;
