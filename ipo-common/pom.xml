@@ -7,19 +7,14 @@
         <groupId>org.ipo</groupId>
         <artifactId>ipo-invest</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>fetch-data</artifactId>
+    <artifactId>ipo-common</artifactId>
 
-
-    <dependencies>
-
-        <dependency>
-            <groupId>org.ipo</groupId>
-            <artifactId>ipo-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
 </project>

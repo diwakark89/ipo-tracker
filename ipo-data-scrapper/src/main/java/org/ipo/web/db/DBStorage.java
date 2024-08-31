@@ -1,6 +1,6 @@
 package org.ipo.web.db;
 
-import org.ipo.model.DBModel;
+import org.ipo.model.IPOData;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
@@ -22,9 +22,9 @@ public class DBStorage {
                 .build();
     }
 
-    public void saveDataToDB(DBModel dbData) {
+    public void saveDataToDB(IPOData dbData) {
         try {
-            DynamoDbTable<DBModel> ipoData = enhancedClient.table("IPOData", TableSchema.fromBean(DBModel.class));
+            DynamoDbTable<IPOData> ipoData = enhancedClient.table("IPOData", TableSchema.fromBean(IPOData.class));
             ipoData.putItem(dbData);
         } catch (DynamoDbException e) {
             System.err.println(e.getMessage());

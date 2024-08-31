@@ -1,25 +1,25 @@
 package org.ipo.web.db;
 
 
-import org.ipo.model.DBModel;
+import org.ipo.model.IPOData;
 import org.ipo.web.scrapper.model.IPOTableData;
 
 public class DataTransformer {
-    public DBModel convertScrapToDBData(IPOTableData data){
-        DBModel dbModel=new DBModel();
+    public IPOData convertScrapToDBData(IPOTableData data){
+        IPOData IPOData =new IPOData();
 
-        dbModel.setIpoName(data.getIpoName());
-        dbModel.setPrice(Integer.parseInt(data.getPrice()));
-        dbModel.setGmp(Integer.parseInt(data.getGmp()));
-        dbModel.setEstListing(Integer.parseInt(data.getEstListing()));
-        dbModel.setLot(Integer.parseInt(data.getLot()));
-        dbModel.setOpenDt(data.getOpenDt());
-        dbModel.setCloseDt(data.getCloseDt());
-        dbModel.setBoaDate(data.getBoaDate());
-        dbModel.setListingDate(data.getListingDate());
+        IPOData.setIpoName(data.getIpoName());
+        IPOData.setPrice(Integer.parseInt(data.getPrice()));
+        IPOData.setGmp(Integer.parseInt(data.getGmp()));
+        IPOData.setEstListing(Integer.parseInt(data.getEstListing()));
+        IPOData.setLot(Integer.parseInt(data.getLot()));
+        IPOData.setOpenDt(data.getOpenDt());
+        IPOData.setCloseDt(data.getCloseDt());
+        IPOData.setBoaDate(data.getBoaDate());
+        IPOData.setListingDate(data.getListingDate());
 
 
-        return dbModel;
+        return IPOData;
     }
 
 }
