@@ -12,11 +12,15 @@ import org.ipo.web.db.DataTransformer;
 import org.ipo.web.scrapper.model.IPOTableData;
 import org.ipo.web.scrapper.util.DataCleaner;
 import org.ipo.web.scrapper.util.FilterData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
 public class WebScrapperService implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(WebScrapperService.class);
 
     private final WebScrapper scrapper;
     private final DBStorage dbStorage;
@@ -59,11 +63,14 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
         LambdaLogger logger = context.getLogger();
 
         List<IPOTableData> ipoList = scrapper.tableScrap(getURL(status), status.name());
-        logger.log("Data found: " + ipoList.size());
+
+        LOG.info("Data found from scrap: {}", ipoList.size());
         List<IPOData> ipoData = transformer.convertScrapToDBData(ipoList);
         logger.log("Data Transformed ");
+        LOG.info("Data Transformed ");
         dbStorage.saveDataToDB(ipoData);
-        logger.log("Data Stored ");
+
+        LOG.info("All Data Stored ");
     }
 
     private String getURL(IPOStatus ipoStatus) {
@@ -85,10 +92,5 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
             }
         }
     }
-
-    public static void main(String[] args) {
-        WebScrapperService webScrapperService = new WebScrapperService();
-    }
-
 
 }

@@ -8,6 +8,8 @@ public class DynamoDBFactory {
     private static DynamoDbClient dynamoDbClient;
     private static DynamoDbEnhancedClient enhancedClient;
 
+    private DynamoDBFactory(){}
+
     public static void initClient(){
         Region region = Region.AP_SOUTH_1;
         dynamoDbClient = DynamoDbClient.builder()

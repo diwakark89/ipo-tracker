@@ -5,11 +5,13 @@ import org.ipo.model.IPOData;
 import org.ipo.web.scrapper.model.IPOTableData;
 
 import java.util.List;
+import java.util.UUID;
 
 public class DataTransformer {
     public IPOData convertScrapToDBData(IPOTableData data){
         IPOData ipoData =new IPOData();
 
+        ipoData.setIpoId(UUID.randomUUID().toString());
         ipoData.setIpoName(data.getIpoName());
         ipoData.setPrice(Integer.parseInt(data.getPrice()));
         ipoData.setGmp(Integer.parseInt(data.getGmp()));
