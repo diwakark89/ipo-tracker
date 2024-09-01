@@ -57,9 +57,8 @@ public class WebScrapperImpl implements WebScrapper{
                     dataList.add(data);
                     data.setStatus(status);
                 }
+                LOG.info("{}", data);
 
-                LOG.info(data.toString());
-                System.out.println(); // Newline after each row
             }
         } catch (IOException e) {
           LOG.error("Unable to extract string due",e);

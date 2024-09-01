@@ -1,9 +1,12 @@
 package org.ipo.model;
 
+import software.amazon.awssdk.enhanced.dynamodb.extensions.annotations.DynamoDbAtomicCounter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
+
+import java.util.Objects;
 
 @DynamoDbBean
 public class IPOData {
@@ -23,6 +26,7 @@ public class IPOData {
 
     @DynamoDbPartitionKey
     @DynamoDbAttribute("ipoId")
+    @DynamoDbAtomicCounter
     public String getIpoId() {
         return ipoId;
     }
@@ -118,5 +122,36 @@ public class IPOData {
 
     public void setListingDate(String listingDate) {
         this.listingDate = listingDate;
+    }
+
+    @Override
+    public String toString() {
+        return "IPOData{" +
+                "boaDate='" + getBoaDate() + '\'' +
+                ", closeDt='" + getCloseDt() + '\'' +
+                ", estListing=" + getEstListing() +
+                ", gmp=" + getGmp() +
+                ", ipoId='" + getIpoId() + '\'' +
+                ", ipoName='" + getIpoName() + '\'' +
+                ", ipoSize=" + getIpoSize() +
+                ", listingDate='" + getListingDate() + '\'' +
+                ", lot=" + getLot() +
+                ", openDt='" + getOpenDt() + '\'' +
+                ", price=" + getPrice() +
+                ", status='" + getStatus() + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IPOData ipoData = (IPOData) o;
+        return getPrice() == ipoData.getPrice() && getGmp() == ipoData.getGmp() && getEstListing() == ipoData.getEstListing() && Double.compare(getIpoSize(), ipoData.getIpoSize()) == 0 && getLot() == ipoData.getLot() && Objects.equals(getIpoId(), ipoData.getIpoId()) && Objects.equals(getStatus(), ipoData.getStatus()) && Objects.equals(getIpoName(), ipoData.getIpoName()) && Objects.equals(getOpenDt(), ipoData.getOpenDt()) && Objects.equals(getCloseDt(), ipoData.getCloseDt()) && Objects.equals(getBoaDate(), ipoData.getBoaDate()) && Objects.equals(getListingDate(), ipoData.getListingDate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIpoId(), getStatus(), getIpoName(), getPrice(), getGmp(), getEstListing(), getIpoSize(), getLot(), getOpenDt(), getCloseDt(), getBoaDate(), getListingDate());
     }
 }

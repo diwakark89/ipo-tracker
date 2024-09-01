@@ -41,7 +41,7 @@ public class IPOTableData {
     }
 
     public String getPrice() {
-        return price;
+        return !price.isEmpty() ? price:"0" ;
     }
 
     public void setPrice(String price) {
@@ -49,7 +49,7 @@ public class IPOTableData {
     }
 
     public String getGmp() {
-        return gmp;
+        return  !gmp.isEmpty() ? gmp:"0" ;
     }
 
     public void setGmp(String gmp) {

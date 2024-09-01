@@ -1,7 +1,6 @@
 package org.ipo.web.scrapper;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
@@ -33,10 +32,10 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
 
 
     public WebScrapperService() {
-        this.dbStorage = new DBStorage();
+        dbStorage = new DBStorage();
         DataCleaner dataCleaner = new DataCleaner();
         FilterData filterData = new FilterData();
-        this.transformer = new DataTransformer();
+        transformer = new DataTransformer();
         scrapper = new WebScrapperImpl(dataCleaner, filterData);
     }
 
@@ -48,7 +47,7 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
         String status = headers.getOrDefault("STATUS", "Current");
         String message;
         try {
-            scrapData(status, context);
+            scrapData(status);
             message = "Successful";
         } catch (Exception ex) {
             message = ex.getMessage();
@@ -58,19 +57,22 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
     }
 
 
-    public void scrapData(String ipoStatus, Context context) {
-        IPOStatus status = IPOStatus.fromString(ipoStatus);
-        LambdaLogger logger = context.getLogger();
+    public void scrapData(String ipoStatus) {
+        try{
+            IPOStatus status = IPOStatus.fromString(ipoStatus);
 
-        List<IPOTableData> ipoList = scrapper.tableScrap(getURL(status), status.name());
+            List<IPOTableData> ipoList = scrapper.tableScrap(getURL(status), status.name());
 
-        LOG.info("Data found from scrap: {}", ipoList.size());
-        List<IPOData> ipoData = transformer.convertScrapToDBData(ipoList);
-        logger.log("Data Transformed ");
-        LOG.info("Data Transformed ");
-        dbStorage.saveDataToDB(ipoData);
+            LOG.info("Data found from scrap: {}", ipoList.size());
+            List<IPOData> ipoDataList = transformer.convertScrapToDBData(ipoList);
+            LOG.info("Data Transformed ");
+            dbStorage.saveDataToDB(ipoDataList);
 
-        LOG.info("All Data Stored ");
+            LOG.info("All Data Stored ");
+        }catch (Exception ex){
+            LOG.error("Exception occurred : {}",ex.getMessage(),ex);
+        }
+
     }
 
     private String getURL(IPOStatus ipoStatus) {

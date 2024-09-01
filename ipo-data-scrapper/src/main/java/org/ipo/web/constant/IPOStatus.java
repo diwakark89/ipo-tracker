@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum IPOStatus {
-    CURRENT("Current"),
-    UPCOMING("Upcoming"),
-    CLOSED("Closed"),
-    LISTED("Listed");
+    CURRENT("current"),
+    UPCOMING("upcoming"),
+    CLOSED("closed"),
+    LISTED("listed");
 
     final String status;
 
