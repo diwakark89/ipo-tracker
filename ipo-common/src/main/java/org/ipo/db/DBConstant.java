@@ -5,7 +5,7 @@ public final class DBConstant {
     }
 
     public static final String IPO_DATA_TABLE = "IPOData";
-    public static final String IPO_GSI_INDEX = "status-index";
+    public static final String IPO_GSI_INDEX = "ipoStatus-index";
 
     public static final String STATUS = "ipoStatus";
     public static final String IPO_NAME = "ipoName";
