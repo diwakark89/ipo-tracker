@@ -26,7 +26,6 @@ public class IPOData {
 
     @DynamoDbPartitionKey
     @DynamoDbAttribute("ipoId")
-    @DynamoDbAtomicCounter
     public String getIpoId() {
         return ipoId;
     }
@@ -35,6 +34,8 @@ public class IPOData {
         this.ipoId = ipoId;
     }
 
+    @DynamoDbSortKey
+    @DynamoDbAttribute("status")
     public String getStatus() {
         return status;
     }
@@ -43,7 +44,7 @@ public class IPOData {
         this.status = status;
     }
 
-    @DynamoDbSortKey
+
     public String getIpoName() {
         return ipoName;
     }
