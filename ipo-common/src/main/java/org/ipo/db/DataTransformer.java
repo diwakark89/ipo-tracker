@@ -21,7 +21,19 @@ public class DataTransformer {
         IPOData ipoData = null;
         try {
 
-            ipoData = builder.ipoName(data.getIpoName()).price(parseIntOrDefault(data.getPrice(), 0)).gmp(parseIntOrDefault(data.getGmp(), 0)).estListing(parseIntOrDefault(data.getEstListing(), 0)).lot(parseIntOrDefault(data.getLot(), 0)).openDt(data.getOpenDt()).closeDt(data.getCloseDt()).boaDate(data.getBoaDate()).listingDate(data.getListingDate()).ipoSize(parseDoubleOrDefault(data.getListingDate(), 0.0)).ipoStatus(data.getStatus()).build();
+            ipoData = builder
+                    .ipoName(data.getIpoName())
+                    .price(parseIntOrDefault(data.getPrice(), 0))
+                    .gmp(parseIntOrDefault(data.getGmp(), 0))
+                    .estListing(parseIntOrDefault(data.getEstListing(), 0))
+                    .lot(parseIntOrDefault(data.getLot(), 0))
+                    .openDt(data.getOpenDt())
+                    .closeDt(data.getCloseDt())
+                    .boaDate(data.getBoaDate())
+                    .listingDate(data.getListingDate())
+                    .ipoSize(parseDoubleOrDefault(data.getListingDate(), 0.0))
+                    .ipoStatus(data.getStatus())
+                    .build();
 
             LOG.info("Data transformed: {}", ipoData);
         }
@@ -45,15 +57,15 @@ public class DataTransformer {
 
                ipoData = builder
                         .ipoName(item.get(IPO_NAME).s())
-                        .price(parseIntOrDefault(item.get(PRICE).s(), 0))
-                        .gmp(parseIntOrDefault(item.get(GMP).s(), 0))
-                        .estListing(parseIntOrDefault(item.get(EST_LISTING).s(), 0))
-                        .lot(parseIntOrDefault(item.get(LOT).s(), 0))
-                        .openDt(item.get(OPEN_DT).n())
-                        .closeDt(item.get(CLOSE_DT).n())
-                        .boaDate(item.get(BOA_DATE).n())
-                        .listingDate(item.get(LISTING_DATE).n())
-                        .ipoSize(parseDoubleOrDefault(item.get(IPO_SIZE).s(), 0.0))
+                        .openDt(item.get(OPEN_DT).s())
+                        .closeDt(item.get(CLOSE_DT).s())
+                        .boaDate(item.get(BOA_DATE).s())
+                        .listingDate(item.get(LISTING_DATE).s())
+                        .price(parseIntOrDefault(item.get(PRICE).n(), 0))
+                        .gmp(parseIntOrDefault(item.get(GMP).n(), 0))
+                        .estListing(parseIntOrDefault(item.get(EST_LISTING).n(), 0))
+                        .lot(parseIntOrDefault(item.get(LOT).n(), 0))
+                        .ipoSize(parseDoubleOrDefault(item.get(IPO_SIZE).n(), 0.0))
                         .ipoStatus(item.get(STATUS).s()).build();
 
                 list.add(ipoData);
@@ -74,6 +86,7 @@ public class DataTransformer {
     }
 
     public static int parseIntOrDefault(String value, int defaultValue) {
+        LOG.info("Parsing Integer Value:{} ",value);
         try {
             if (value != null) {
                 return Integer.parseInt(value);
@@ -87,6 +100,7 @@ public class DataTransformer {
     }
 
     public static double parseDoubleOrDefault(String value, double defaultValue) {
+        LOG.info("Parsing Double Value:{} ",value);
         try {
             if (value != null) {
                 return Double.parseDouble(value);
