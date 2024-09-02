@@ -27,7 +27,7 @@ public enum IPOStatus {
             }
         }
         // If not found, throw an IllegalArgumentException or return null
-        throw new IllegalArgumentException("No enum constant with status: " + status);
+        throw new IllegalArgumentException("No enum constant with ipoStatus: " + status);
     }
 
 }

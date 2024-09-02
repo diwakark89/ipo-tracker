@@ -1,9 +1,7 @@
 package org.ipo.web.scrapper;
 
 import org.ipo.log.LogTracker;
-import org.ipo.log.model.Log;
-import org.ipo.log.model.LogType;
-import org.ipo.web.scrapper.model.IPOTableData;
+import org.ipo.model.IPOTableData;
 import org.ipo.web.scrapper.util.DataCleaner;
 import org.ipo.web.scrapper.util.FilterData;
 import org.jsoup.Jsoup;

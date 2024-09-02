@@ -1,4 +1,4 @@
-package org.ipo.web.scrapper.model;
+package org.ipo.model;
 
 import java.util.Objects;
 
@@ -130,6 +130,6 @@ public class IPOTableData {
 
     @Override
     public String toString() {
-        return "IPOTableData{" + "ipoId='" + ipoId + '\'' + ", status='" + status + '\'' + ", ipoName='" + ipoName + '\'' + ", price='" + price + '\'' + ", gmp='" + gmp + '\'' + ", estListing='" + estListing + '\'' + ", ipoSize='" + ipoSize + '\'' + ", lot='" + lot + '\'' + ", openDt='" + openDt + '\'' + ", closeDt='" + closeDt + '\'' + ", boaDate='" + boaDate + '\'' + ", listingDate='" + listingDate + '\'' + '}';
+        return "IPOTableData{" + "ipoId='" + ipoId + '\'' + ", ipoStatus='" + status + '\'' + ", ipoName='" + ipoName + '\'' + ", price='" + price + '\'' + ", gmp='" + gmp + '\'' + ", estListing='" + estListing + '\'' + ", ipoSize='" + ipoSize + '\'' + ", lot='" + lot + '\'' + ", openDt='" + openDt + '\'' + ", closeDt='" + closeDt + '\'' + ", boaDate='" + boaDate + '\'' + ", listingDate='" + listingDate + '\'' + '}';
     }
 }
