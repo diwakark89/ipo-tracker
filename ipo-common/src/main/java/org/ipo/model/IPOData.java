@@ -5,13 +5,143 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
 @DynamoDbBean
-public record IPOData(
+public class IPOData {
 
-        String ipoStatus, @DynamoDbPartitionKey @DynamoDbAttribute("ipoName") String ipoName, int price, int gmp,
-        int estListing, double ipoSize, int lot, String openDt, String closeDt, String boaDate, String listingDate) {
+    private String ipoStatus;
+    private String ipoName;
+    private int price;
+    private int gmp;
+    private int estListing;
+    private double ipoSize;
+    private int lot;
+    private String openDt;
+    private String closeDt;
+    private String boaDate;
+    private String listingDate;
 
+    // No-argument constructor
+    public IPOData() {
+    }
 
-    // Static inner Builder class
+    // Constructor with all fields
+    public IPOData(String ipoStatus, String ipoName, int price, int gmp, int estListing, double ipoSize, int lot,
+            String openDt, String closeDt, String boaDate, String listingDate) {
+        this.ipoStatus = ipoStatus;
+        this.ipoName = ipoName;
+        this.price = price;
+        this.gmp = gmp;
+        this.estListing = estListing;
+        this.ipoSize = ipoSize;
+        this.lot = lot;
+        this.openDt = openDt;
+        this.closeDt = closeDt;
+        this.boaDate = boaDate;
+        this.listingDate = listingDate;
+    }
+
+    // Getter and Setter methods
+
+    @DynamoDbAttribute("ipoStatus")
+    public String getIpoStatus() {
+        return ipoStatus;
+    }
+
+    public void setIpoStatus(String ipoStatus) {
+        this.ipoStatus = ipoStatus;
+    }
+
+    @DynamoDbPartitionKey
+    @DynamoDbAttribute("ipoName")
+    public String getIpoName() {
+        return ipoName;
+    }
+
+    public void setIpoName(String ipoName) {
+        this.ipoName = ipoName;
+    }
+
+    @DynamoDbAttribute("price")
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    @DynamoDbAttribute("gmp")
+    public int getGmp() {
+        return gmp;
+    }
+
+    public void setGmp(int gmp) {
+        this.gmp = gmp;
+    }
+
+    @DynamoDbAttribute("estListing")
+    public int getEstListing() {
+        return estListing;
+    }
+
+    public void setEstListing(int estListing) {
+        this.estListing = estListing;
+    }
+
+    @DynamoDbAttribute("ipoSize")
+    public double getIpoSize() {
+        return ipoSize;
+    }
+
+    public void setIpoSize(double ipoSize) {
+        this.ipoSize = ipoSize;
+    }
+
+    @DynamoDbAttribute("lot")
+    public int getLot() {
+        return lot;
+    }
+
+    public void setLot(int lot) {
+        this.lot = lot;
+    }
+
+    @DynamoDbAttribute("openDt")
+    public String getOpenDt() {
+        return openDt;
+    }
+
+    public void setOpenDt(String openDt) {
+        this.openDt = openDt;
+    }
+
+    @DynamoDbAttribute("closeDt")
+    public String getCloseDt() {
+        return closeDt;
+    }
+
+    public void setCloseDt(String closeDt) {
+        this.closeDt = closeDt;
+    }
+
+    @DynamoDbAttribute("boaDate")
+    public String getBoaDate() {
+        return boaDate;
+    }
+
+    public void setBoaDate(String boaDate) {
+        this.boaDate = boaDate;
+    }
+
+    @DynamoDbAttribute("listingDate")
+    public String getListingDate() {
+        return listingDate;
+    }
+
+    public void setListingDate(String listingDate) {
+        this.listingDate = listingDate;
+    }
+
+    // Builder class for constructing IPOData instances
     public static class Builder {
         private String ipoStatus;
         private String ipoName;
@@ -25,11 +155,10 @@ public record IPOData(
         private String boaDate;
         private String listingDate;
 
-        public Builder() {
-        }
+        public Builder() {}
 
-        public Builder ipoStatus(String status) {
-            this.ipoStatus = status;
+        public Builder ipoStatus(String ipoStatus) {
+            this.ipoStatus = ipoStatus;
             return this;
         }
 
@@ -88,5 +217,4 @@ public record IPOData(
         }
     }
 }
-
 

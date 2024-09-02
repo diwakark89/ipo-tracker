@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
+import static org.ipo.db.DBConstant.STATUS;
+
 public class WebScrapperService implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebScrapperService.class);
@@ -39,11 +41,10 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
     @Override
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
         APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
-        Map<String, String> headers = requestEvent.getHeaders();
-        try {
-            headers.forEach((key, value) -> LOG.info("{} : {} ", key, value));
 
-            String status = headers.getOrDefault("STATUS", "Current");
+        try {
+
+            String status = requestEvent.getQueryStringParameters().get(STATUS);
             LogTracker.info("Data scrapping started for: " + status);
 
             scrapData(status);

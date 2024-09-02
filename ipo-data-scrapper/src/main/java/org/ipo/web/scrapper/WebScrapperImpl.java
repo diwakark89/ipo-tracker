@@ -58,8 +58,6 @@ public class WebScrapperImpl implements WebScrapper{
                     dataList.add(data);
                     data.setStatus(status);
                 }
-                LOG.info("{}", data);
-
             }
         } catch (IOException ex) {
             String message = String.format("Unable to extract string due: %s", ex.getMessage());
