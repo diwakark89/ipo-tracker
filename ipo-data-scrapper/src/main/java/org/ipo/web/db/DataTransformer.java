@@ -1,6 +1,9 @@
 package org.ipo.web.db;
 
 
+import org.ipo.log.LogTracker;
+import org.ipo.log.model.Log;
+import org.ipo.log.model.LogType;
 import org.ipo.model.IPOData;
 import org.ipo.web.scrapper.WebScrapperService;
 import org.ipo.web.scrapper.model.IPOTableData;
@@ -16,7 +19,7 @@ public class DataTransformer {
     public IPOData convertScrapToDBData(IPOTableData data) {
         IPOData ipoData = new IPOData();
         try {
-            ipoData.setIpoId(UUID.randomUUID().toString());
+
             ipoData.setIpoName(data.getIpoName());
             ipoData.setPrice(parseIntOrDefault(data.getPrice(), 0));
             ipoData.setGmp(parseIntOrDefault(data.getGmp(), 0));
@@ -30,7 +33,9 @@ public class DataTransformer {
             ipoData.setStatus(data.getStatus());
             LOG.info("Data transformed: {}", ipoData);
         } catch (Exception ex) {
-            LOG.error("Exception occurred for: {}: {}", data, ex.getMessage(), ex);
+            String message=String.format("Exception occurred while converting: %s due to: %s",data, ex.getMessage());
+            LogTracker.append(new Log(message, LogType.ERROR));
+            LOG.error(message, ex);
         }
 
 

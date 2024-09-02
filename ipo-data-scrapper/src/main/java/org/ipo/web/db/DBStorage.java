@@ -1,6 +1,9 @@
 package org.ipo.web.db;
 
 import org.ipo.db.DynamoDBFactory;
+import org.ipo.log.LogTracker;
+import org.ipo.log.model.Log;
+import org.ipo.log.model.LogType;
 import org.ipo.model.IPOData;
 import org.ipo.web.scrapper.WebScrapperService;
 import org.slf4j.Logger;
@@ -29,7 +32,9 @@ public class DBStorage {
             LOG.info("Data being stored: {} ", dbData);
             ipoData.putItem(dbData);
         } catch (DynamoDbException e) {
-            LOG.error("Exception occurred while storing data: {} due to: {}", dbData, e.getMessage(), e);
+            String message=String.format("Exception occurred while storing data: %s due to: %s",dbData, e.getMessage());
+            LogTracker.append(new Log(message, LogType.ERROR));
+            LOG.error(message, e);
             throw new RuntimeException("Exception occurred while saving data " + e.getMessage());
         }
     }

@@ -1,17 +1,14 @@
 package org.ipo.model;
 
-import software.amazon.awssdk.enhanced.dynamodb.extensions.annotations.DynamoDbAtomicCounter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 import java.util.Objects;
 
 @DynamoDbBean
 public class IPOData {
 
-    private String ipoId;
     private String status;
     private String ipoName;
     private int price;
@@ -25,26 +22,7 @@ public class IPOData {
     private String listingDate;
 
     @DynamoDbPartitionKey
-    @DynamoDbAttribute("ipoId")
-    public String getIpoId() {
-        return ipoId;
-    }
-
-    public void setIpoId(String ipoId) {
-        this.ipoId = ipoId;
-    }
-
-    @DynamoDbSortKey
-    @DynamoDbAttribute("status")
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-
+    @DynamoDbAttribute("ipoName")
     public String getIpoName() {
         return ipoName;
     }
@@ -125,34 +103,32 @@ public class IPOData {
         this.listingDate = listingDate;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return "IPOData{" +
-                "boaDate='" + getBoaDate() + '\'' +
-                ", closeDt='" + getCloseDt() + '\'' +
-                ", estListing=" + getEstListing() +
-                ", gmp=" + getGmp() +
-                ", ipoId='" + getIpoId() + '\'' +
-                ", ipoName='" + getIpoName() + '\'' +
-                ", ipoSize=" + getIpoSize() +
-                ", listingDate='" + getListingDate() + '\'' +
-                ", lot=" + getLot() +
-                ", openDt='" + getOpenDt() + '\'' +
-                ", price=" + getPrice() +
-                ", status='" + getStatus() + '\'' +
-                '}';
+        return "IPOData{" + "status='" + status + '\'' + ", ipoName='" + ipoName + '\'' + ", price=" + price + ", gmp=" + gmp + ", estListing=" + estListing + ", ipoSize=" + ipoSize + ", lot=" + lot + ", openDt='" + openDt + '\'' + ", closeDt='" + closeDt + '\'' + ", boaDate='" + boaDate + '\'' + ", listingDate='" + listingDate + '\'' + '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        IPOData ipoData = (IPOData) o;
-        return getPrice() == ipoData.getPrice() && getGmp() == ipoData.getGmp() && getEstListing() == ipoData.getEstListing() && Double.compare(getIpoSize(), ipoData.getIpoSize()) == 0 && getLot() == ipoData.getLot() && Objects.equals(getIpoId(), ipoData.getIpoId()) && Objects.equals(getStatus(), ipoData.getStatus()) && Objects.equals(getIpoName(), ipoData.getIpoName()) && Objects.equals(getOpenDt(), ipoData.getOpenDt()) && Objects.equals(getCloseDt(), ipoData.getCloseDt()) && Objects.equals(getBoaDate(), ipoData.getBoaDate()) && Objects.equals(getListingDate(), ipoData.getListingDate());
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof IPOData ipoData)) {
+            return false;
+        }
+        return getPrice() == ipoData.getPrice() && getGmp() == ipoData.getGmp() && getEstListing() == ipoData.getEstListing() && Double.compare(getIpoSize(), ipoData.getIpoSize()) == 0 && getLot() == ipoData.getLot() && Objects.equals(getStatus(), ipoData.getStatus()) && Objects.equals(getIpoName(), ipoData.getIpoName()) && Objects.equals(getOpenDt(), ipoData.getOpenDt()) && Objects.equals(getCloseDt(), ipoData.getCloseDt()) && Objects.equals(getBoaDate(), ipoData.getBoaDate()) && Objects.equals(getListingDate(), ipoData.getListingDate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIpoId(), getStatus(), getIpoName(), getPrice(), getGmp(), getEstListing(), getIpoSize(), getLot(), getOpenDt(), getCloseDt(), getBoaDate(), getListingDate());
+        return Objects.hash(getStatus(), getIpoName(), getPrice(), getGmp(), getEstListing(), getIpoSize(), getLot(), getOpenDt(), getCloseDt(), getBoaDate(), getListingDate());
     }
 }
