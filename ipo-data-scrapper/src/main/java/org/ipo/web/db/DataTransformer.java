@@ -34,7 +34,7 @@ public class DataTransformer {
             LOG.info("Data transformed: {}", ipoData);
         } catch (Exception ex) {
             String message=String.format("Exception occurred while converting: %s due to: %s",data, ex.getMessage());
-            LogTracker.append(new Log(message, LogType.ERROR));
+            LogTracker.error(message);
             LOG.error(message, ex);
         }
 

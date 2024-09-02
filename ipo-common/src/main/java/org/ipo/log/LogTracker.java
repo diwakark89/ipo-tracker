@@ -7,36 +7,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LogTracker {
-    private static List<Log> logList;
+    private static final List<Log> logList;
 
-    public static void append(Log log){
-        if(null == logList){
-            logList=new ArrayList<>(15);
-        }
-        logList.add(log);
+    static {
+        logList = new ArrayList<>(15);
     }
 
-    public static void append(String completedTheRequest) {
-        logList.add(new Log(completedTheRequest));
+
+    public static void error(String message) {
+        logList.add(new Log(message, LogType.ERROR));
     }
 
-    public static void append(String message, LogType logType) {
-        logList.add(new Log(message,logType));
+    public static void info(String message) {
+        logList.add(new Log(message, LogType.INFO));
     }
 
-    public static String getLogMessage(){
-        StringBuilder builder=new StringBuilder();
-        logList.forEach(log -> builder.append(log.logType().getLogType()).append(" : ").append(log.message()));
+    public static void warn(String message) {
+        logList.add(new Log(message, LogType.WARN));
+    }
+
+
+    public static String getLogMessage() {
+        StringBuilder builder = new StringBuilder();
+        logList.forEach(log -> builder.append(log.logType().getLogType()).append(" : ").append(log.message()).append("\n"));
         return builder.toString();
     }
 
-    public static void clearLog(){
+    public static void clearLog() {
         logList.clear();
     }
 
 
     public static String buildResponse() {
-        String logs= getLogMessage();
+        String logs = getLogMessage();
         clearLog();
         return logs;
     }

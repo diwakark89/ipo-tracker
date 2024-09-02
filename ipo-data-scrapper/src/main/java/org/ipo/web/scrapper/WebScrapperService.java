@@ -5,8 +5,6 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.ipo.log.LogTracker;
-import org.ipo.log.model.Log;
-import org.ipo.log.model.LogType;
 import org.ipo.model.IPOData;
 import org.ipo.web.constant.IPOStatus;
 import org.ipo.web.db.DBStorage;
@@ -42,15 +40,18 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
         APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
         Map<String, String> headers = requestEvent.getHeaders();
-
-        String status = headers.getOrDefault("STATUS", "Current");
-        LogTracker.append("Data scrapping started for: "+ status);
         try {
+            headers.forEach((key, value) -> LOG.info("{} : {} ", key, value));
+
+            String status = headers.getOrDefault("STATUS", "Current");
+            LogTracker.info("Data scrapping started for: " + status);
+
             scrapData(status);
-            LogTracker.append("Completed the request");
-        } catch (Exception ex) {
-            String message=String.format("Exception occurred %s", ex.getMessage());
-            LogTracker.append(new Log(message, LogType.ERROR));
+            LogTracker.info("Completed the request");
+        }
+        catch (Exception ex) {
+            String message = String.format("Exception occurred %s", ex.getMessage());
+            LogTracker.error(message);
             LOG.error(message, ex);
         }
 
@@ -59,7 +60,7 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
 
 
     public void scrapData(String ipoStatus) {
-        try{
+        try {
             IPOStatus status = IPOStatus.fromString(ipoStatus);
 
             List<IPOTableData> ipoList = scrapper.tableScrap(LambdaEnv.getURL(status), status.name());
@@ -70,12 +71,14 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
             dbStorage.saveDataToDB(ipoDataList);
 
             LOG.info("All Data Stored ");
-        }catch (Exception ex){
-            LOG.error("Exception occurred : {}",ex.getMessage(),ex);
+        }
+        catch (Exception ex) {
+            String message = String.format("Exception occurred %s", ex.getMessage());
+            LogTracker.error(message);
+            LOG.error(message, ex);
         }
 
     }
-
 
 
 }

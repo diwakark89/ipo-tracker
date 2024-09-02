@@ -2,10 +2,7 @@ package org.ipo.web.db;
 
 import org.ipo.db.DynamoDBFactory;
 import org.ipo.log.LogTracker;
-import org.ipo.log.model.Log;
-import org.ipo.log.model.LogType;
 import org.ipo.model.IPOData;
-import org.ipo.web.scrapper.WebScrapperService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -33,7 +30,7 @@ public class DBStorage {
             ipoData.putItem(dbData);
         } catch (DynamoDbException e) {
             String message=String.format("Exception occurred while storing data: %s due to: %s",dbData, e.getMessage());
-            LogTracker.append(new Log(message, LogType.ERROR));
+            LogTracker.error(message);
             LOG.error(message, e);
             throw new RuntimeException("Exception occurred while saving data " + e.getMessage());
         }

@@ -3,16 +3,16 @@ package org.ipo.web.scrapper.util;
 import org.ipo.web.constant.IPOStatus;
 
 public class LambdaEnv {
-    private static String websiteCurrentUrl ;
-    private static  String websiteCloseUrl ;
-    private static  String websiteListedUrl;
-    private static  String websiteUpcomingUrl;
+    private static final String websiteCurrentUrl ;
+    private static final String websiteClosedUrl;
+    private static final String websiteListedUrl;
+    private static final String websiteUpcomingUrl;
 
     static {
-        websiteCurrentUrl = System.getenv("DB_HOST");
-        websiteCloseUrl = System.getenv("DB_PORT");
-        websiteListedUrl = System.getenv("DB_USER");
-        websiteUpcomingUrl = System.getenv("DB_PASSWORD");
+        websiteCurrentUrl = System.getenv("CURRENT");
+        websiteClosedUrl = System.getenv("CLOSED");
+        websiteListedUrl = System.getenv("LISTED");
+        websiteUpcomingUrl = System.getenv("UPCOMING");
     }
 
 
@@ -22,7 +22,7 @@ public class LambdaEnv {
                 return websiteCurrentUrl;
             }
             case CLOSED -> {
-                return websiteCloseUrl;
+                return websiteClosedUrl;
             }
             case LISTED -> {
                 return websiteListedUrl;
