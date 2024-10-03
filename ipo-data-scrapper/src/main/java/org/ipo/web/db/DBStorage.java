@@ -14,13 +14,14 @@ import java.util.List;
 
 public class DBStorage {
     private static final Logger LOG = LoggerFactory.getLogger(DBStorage.class);
+    public static final String IPO_DATA = "IPOData";
 
     private final DynamoDbEnhancedClient enhancedClient;
     private final DynamoDbTable<IPOData> ipoData;
 
     public DBStorage() {
         enhancedClient = DynamoDBFactory.getEnhancedClient();
-        ipoData = enhancedClient.table("IPOData", TableSchema.fromBean(IPOData.class));
+        ipoData = enhancedClient.table(IPO_DATA, TableSchema.fromBean(IPOData.class));
     }
 
     public void saveDataToDB(IPOData dbData) {

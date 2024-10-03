@@ -19,13 +19,14 @@ public class IPOData {
     private String boaDate;
     private String listingDate;
     private String updateDate;
+
     // No-argument constructor
     public IPOData() {
     }
 
     // Constructor with all fields
     public IPOData(String ipoStatus, String ipoName, int price, int gmp, int estListing, double ipoSize, int lot,
-            String openDt, String closeDt, String boaDate, String listingDate,String updateDate) {
+                   String openDt, String closeDt, String boaDate, String listingDate, String updateDate) {
         this.ipoStatus = ipoStatus;
         this.ipoName = ipoName;
         this.price = price;
@@ -166,7 +167,8 @@ public class IPOData {
         private String listingDate;
         private String updateDate;
 
-        public Builder() {}
+        public Builder() {
+        }
 
         public Builder ipoStatus(String ipoStatus) {
             this.ipoStatus = ipoStatus;
@@ -229,7 +231,7 @@ public class IPOData {
         }
 
         public IPOData build() {
-            return new IPOData(ipoStatus, ipoName, price, gmp, estListing, ipoSize, lot, openDt, closeDt, boaDate, listingDate,updateDate);
+            return new IPOData(ipoStatus, ipoName, price, gmp, estListing, ipoSize, lot, openDt, closeDt, boaDate, listingDate, updateDate);
         }
     }
 
