@@ -27,37 +27,33 @@ public class DataCleaner {
             };
         }
         catch (Exception ex) {
-            LOG.error("Exception occurred with {}:{}", i, text.toString(), ex);
+            LOG.error("Exception occurred with {}:{}", i, text, ex);
             return text.toString();
         }
 
     }
 
     private String cleanListingDate(StringBuilder text) {
-        replaceString(text, "null");
-
-        return trim(text);
+        return removeNull(text);
     }
 
     private String cleanBOADate(StringBuilder text) {
-        replaceString(text, "null");
-
-        return trim(text);
+        return removeNull(text);
     }
 
     private String cleanCloseDate(StringBuilder text) {
-        replaceString(text, "null");
-
-        return trim(text);
+        return removeNull(text);
     }
 
     private String cleanOpenDate(StringBuilder text) {
-        replaceString(text, "null");
-
-        return trim(text);
+        return removeNull(text);
     }
 
     private String cleanLotSize(StringBuilder text) {
+        return removeNull(text);
+    }
+
+    private String removeNull(StringBuilder text) {
         replaceString(text, "null");
 
         return trim(text);

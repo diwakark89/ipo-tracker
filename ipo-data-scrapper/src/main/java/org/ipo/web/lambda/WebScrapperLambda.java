@@ -1,15 +1,15 @@
-package org.ipo.web.scrapper;
+package org.ipo.web.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import org.ipo.db.DataTransformer;
 import org.ipo.log.LogTracker;
 import org.ipo.model.IPOData;
+import org.ipo.model.IPOTableData;
 import org.ipo.web.constant.IPOStatus;
 import org.ipo.web.db.DBStorage;
-import org.ipo.db.DataTransformer;
-import org.ipo.model.IPOTableData;
+import org.ipo.web.scrapper.WebScrapper;
+import org.ipo.web.scrapper.WebScrapperImpl;
 import org.ipo.web.scrapper.util.DataCleaner;
 import org.ipo.web.scrapper.util.FilterData;
 import org.ipo.web.scrapper.util.LambdaEnv;
@@ -19,18 +19,16 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-import static org.ipo.db.DBConstant.STATUS;
+public class WebScrapperLambda implements RequestHandler<Map<String, String>, String> {
 
-public class WebScrapperService implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(WebScrapperService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WebScrapperLambda.class);
 
     private final WebScrapper scrapper;
     private final DBStorage dbStorage;
     private final DataTransformer transformer;
 
 
-    public WebScrapperService() {
+    public WebScrapperLambda() {
         dbStorage = new DBStorage();
         DataCleaner dataCleaner = new DataCleaner();
         FilterData filterData = new FilterData();
@@ -39,24 +37,22 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
     }
 
     @Override
-    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
-        APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
+    public String handleRequest(Map<String, String> event, Context context) {
 
         try {
 
-            String status = requestEvent.getQueryStringParameters().get(STATUS);
+            String status = event.getOrDefault("STATUS", "Current");
             LogTracker.info("Data scrapping started for: " + status);
 
             scrapData(status);
             LogTracker.info("Completed the request");
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String message = String.format("Exception occurred %s", ex.getMessage());
             LogTracker.error(message);
             LOG.error(message, ex);
         }
 
-        return responseEvent.withStatusCode(200).withBody(LogTracker.buildResponse());
+        return LogTracker.buildResponse();
     }
 
 
@@ -71,9 +67,7 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
             LOG.info("Data Transformed ");
             dbStorage.saveDataToDB(ipoDataList);
 
-            LOG.info("All Data Stored ");
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String message = String.format("Exception occurred %s", ex.getMessage());
             LogTracker.error(message);
             LOG.error(message, ex);

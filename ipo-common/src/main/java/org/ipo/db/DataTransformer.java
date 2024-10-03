@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.dynamodb.model.QueryResponse;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class DataTransformer {
                     .listingDate(data.getListingDate())
                     .ipoSize(parseDoubleOrDefault(data.getListingDate(), 0.0))
                     .ipoStatus(data.getStatus())
+                    .updateDate(LocalDateTime.now().toString())
                     .build();
 
             LOG.info("Data transformed: {}", ipoData);
@@ -86,7 +88,6 @@ public class DataTransformer {
     }
 
     public static int parseIntOrDefault(String value, int defaultValue) {
-        LOG.info("Parsing Integer Value:{} ",value);
         try {
             if (value != null) {
                 return Integer.parseInt(value);
@@ -100,7 +101,6 @@ public class DataTransformer {
     }
 
     public static double parseDoubleOrDefault(String value, double defaultValue) {
-        LOG.info("Parsing Double Value:{} ",value);
         try {
             if (value != null) {
                 return Double.parseDouble(value);

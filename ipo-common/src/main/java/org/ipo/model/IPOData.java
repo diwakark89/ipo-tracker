@@ -18,14 +18,14 @@ public class IPOData {
     private String closeDt;
     private String boaDate;
     private String listingDate;
-
+    private String updateDate;
     // No-argument constructor
     public IPOData() {
     }
 
     // Constructor with all fields
     public IPOData(String ipoStatus, String ipoName, int price, int gmp, int estListing, double ipoSize, int lot,
-            String openDt, String closeDt, String boaDate, String listingDate) {
+            String openDt, String closeDt, String boaDate, String listingDate,String updateDate) {
         this.ipoStatus = ipoStatus;
         this.ipoName = ipoName;
         this.price = price;
@@ -37,6 +37,7 @@ public class IPOData {
         this.closeDt = closeDt;
         this.boaDate = boaDate;
         this.listingDate = listingDate;
+        this.updateDate = updateDate;
     }
 
     // Getter and Setter methods
@@ -141,6 +142,15 @@ public class IPOData {
         this.listingDate = listingDate;
     }
 
+    @DynamoDbAttribute("updateDate")
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
     // Builder class for constructing IPOData instances
     public static class Builder {
         private String ipoStatus;
@@ -154,6 +164,7 @@ public class IPOData {
         private String closeDt;
         private String boaDate;
         private String listingDate;
+        private String updateDate;
 
         public Builder() {}
 
@@ -212,9 +223,32 @@ public class IPOData {
             return this;
         }
 
-        public IPOData build() {
-            return new IPOData(ipoStatus, ipoName, price, gmp, estListing, ipoSize, lot, openDt, closeDt, boaDate, listingDate);
+        public Builder updateDate(String updateDate) {
+            this.updateDate = updateDate;
+            return this;
         }
+
+        public IPOData build() {
+            return new IPOData(ipoStatus, ipoName, price, gmp, estListing, ipoSize, lot, openDt, closeDt, boaDate, listingDate,updateDate);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "IPOData{" +
+                "boaDate='" + getBoaDate() + '\'' +
+                ", closeDt='" + getCloseDt() + '\'' +
+                ", estListing=" + getEstListing() +
+                ", gmp=" + getGmp() +
+                ", ipoName='" + getIpoName() + '\'' +
+                ", ipoSize=" + getIpoSize() +
+                ", ipoStatus='" + getIpoStatus() + '\'' +
+                ", listingDate='" + getListingDate() + '\'' +
+                ", lot=" + getLot() +
+                ", openDt='" + getOpenDt() + '\'' +
+                ", price=" + getPrice() +
+                ", updateDate='" + getUpdateDate() + '\'' +
+                '}';
     }
 }
 

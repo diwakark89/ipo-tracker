@@ -28,11 +28,10 @@ public class DBStorage {
 
             LOG.info("Data being stored: {} ", dbData);
             ipoData.putItem(dbData);
-        } catch (DynamoDbException e) {
-            String message=String.format("Exception occurred while storing data: %s due to: %s",dbData, e.getMessage());
+        } catch (DynamoDbException ex) {
+            String message = String.format("Exception occurred while storing data: %s due to: %s", dbData, ex.getMessage());
             LogTracker.error(message);
-            LOG.error(message, e);
-            throw new RuntimeException("Exception occurred while saving data " + e.getMessage());
+            LOG.error(message, ex);
         }
     }
 

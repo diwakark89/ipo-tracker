@@ -43,3 +43,5 @@ build/
 /.idea/uiDesigner.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/aws.xml
+/ipo-data-scrapper/ipo-data.zip
+/ipo-data-scrapper/java/lib/ipo-data-scrapper-1.0-SNAPSHOT.jar

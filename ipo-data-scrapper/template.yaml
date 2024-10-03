@@ -1,6 +1,8 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
 Resources:
   DataScrapperLambdaFunction:
-    Type: 'AWS::Serverless::Function'
+    Type: AWS::Serverless::Function
     Properties:
       Handler: org.ipo.web.lambda.WebScrapperLambda::handleRequest
       Runtime: java21
@@ -9,26 +11,11 @@ Resources:
       Timeout: 120
       Environment:
         Variables:
-          TABLE_NAME: "IPOData"  # Ensure this is set correctly
+          TABLE_NAME: "IPOData"  # Ensure this is set correctly to the name of your existing DynamoDB table
+          CLOSE: https://www.investorgain.com/report/live-ipo-gmp/331/close/
+          CURRENT: https://www.investorgain.com/report/live-ipo-gmp/331/current/
+          LISTED: https://www.investorgain.com/report/live-ipo-gmp/331/listed/
+          UPCOMING: https://www.investorgain.com/report/live-ipo-gmp/331/close/
       Policies:
-        - AWSLambdaBasicExecutionRole
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: 'Allow'
-              Action:
-                - 'dynamodb:GetItem'
-              Resource: 'arn:aws:dynamodb:ap-south-1:123456789012:table/IPOData'
-
-  UserTable:
-    Type: 'AWS::DynamoDB::Table'
-    Properties:
-      TableName: IPOData
-      AttributeDefinitions:
-        - AttributeName: ipoId
-          AttributeType: s
-      KeySchema:
-        - AttributeName: ipoId
-          KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 2
-        WriteCapacityUnits: 2
+        - DynamoDBCrudPolicy:
+            TableName: "IPOData"
