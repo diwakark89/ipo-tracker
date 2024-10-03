@@ -2,7 +2,6 @@ package org.ipo.web.db;
 
 
 import org.ipo.model.IPOData;
-import org.ipo.web.scrapper.WebScrapperService;
 import org.ipo.web.scrapper.model.IPOTableData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -44,6 +44,7 @@ public class IPOData {
     }
 
     @DynamoDbSortKey
+    @DynamoDbAttribute("ipoName")
     public String getIpoName() {
         return ipoName;
     }

@@ -1,13 +1,13 @@
-package org.ipo.web.scrapper;
+package org.ipo.web.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.ipo.model.IPOData;
 import org.ipo.web.constant.IPOStatus;
 import org.ipo.web.db.DBStorage;
 import org.ipo.web.db.DataTransformer;
+import org.ipo.web.scrapper.WebScrapper;
+import org.ipo.web.scrapper.WebScrapperImpl;
 import org.ipo.web.scrapper.model.IPOTableData;
 import org.ipo.web.scrapper.util.DataCleaner;
 import org.ipo.web.scrapper.util.FilterData;
@@ -17,9 +17,10 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
-public class WebScrapperService implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class WebScrapperLambda implements RequestHandler<Map<String, String>, String>  {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WebScrapperService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WebScrapperLambda.class);
+    public static final String STATUS = "STATUS";
 
     private final WebScrapper scrapper;
     private final DBStorage dbStorage;
@@ -31,7 +32,7 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
     private static final String WEBSITE_UPCOMING_URL = "https://www.investorgain.com/report/live-ipo-gmp/331/close/";
 
 
-    public WebScrapperService() {
+    public WebScrapperLambda() {
         dbStorage = new DBStorage();
         DataCleaner dataCleaner = new DataCleaner();
         FilterData filterData = new FilterData();
@@ -40,11 +41,10 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
     }
 
     @Override
-    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
-        APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
-        Map<String, String> headers = requestEvent.getHeaders();
+    public String handleRequest(Map<String, String> event, Context context) {
+        // Extracting the STATUS from the event
+        String status = event.getOrDefault(STATUS, "Current");
 
-        String status = headers.getOrDefault("STATUS", "Current");
         String message;
         try {
             scrapData(status);
@@ -53,7 +53,7 @@ public class WebScrapperService implements RequestHandler<APIGatewayProxyRequest
             message = ex.getMessage();
         }
 
-        return responseEvent.withStatusCode(200).withBody(message);
+        return message;
     }
 
 
