@@ -18,4 +18,6 @@ public final class DBConstant {
     public static final String CLOSE_DT = "closeDt";
     public static final String BOA_DATE = "boaDate";
     public static final String LISTING_DATE = "listingDate";
+    public static final String UPDATE_DATE = "updateDate";
+    public static final String LISTED_PRICE = "listedPrice";
 }

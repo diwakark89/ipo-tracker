@@ -38,8 +38,7 @@ public class DataTransformer {
                     .build();
 
             LOG.info("Data transformed: {}", ipoData);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String message = String.format("Exception occurred while converting: %s due to: %s", data, ex.getMessage());
             LogTracker.error(message);
             LOG.error(message, ex);
@@ -51,13 +50,12 @@ public class DataTransformer {
     public List<IPOData> dbResponseTOBean(QueryResponse queryResponse) {
         List<IPOData> list = new ArrayList<>();
 
-
         queryResponse.items().forEach(item -> {
             IPOData.Builder builder = new IPOData.Builder();
             IPOData ipoData;
             try {
 
-               ipoData = builder
+                ipoData = builder
                         .ipoName(item.get(IPO_NAME).s())
                         .openDt(item.get(OPEN_DT).s())
                         .closeDt(item.get(CLOSE_DT).s())
@@ -68,11 +66,13 @@ public class DataTransformer {
                         .estListing(parseIntOrDefault(item.get(EST_LISTING).n(), 0))
                         .lot(parseIntOrDefault(item.get(LOT).n(), 0))
                         .ipoSize(parseDoubleOrDefault(item.get(IPO_SIZE).n(), 0.0))
-                        .ipoStatus(item.get(STATUS).s()).build();
+                        .ipoStatus(item.get(STATUS).s())
+                        .listedPrice(parseDoubleOrDefault(item.get(LISTED_PRICE).n(), 0))
+                        .updateDate(item.get(UPDATE_DATE).s())
+                        .build();
 
                 list.add(ipoData);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 String message = String.format("Exception occurred while converting: %s due to: %s", item, ex.getMessage());
                 LogTracker.error(message);
                 LOG.error(message, ex);
@@ -94,8 +94,7 @@ public class DataTransformer {
             }
             return defaultValue;
 
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return defaultValue; // Return default if parsing fails
         }
     }
@@ -107,8 +106,7 @@ public class DataTransformer {
             }
             return defaultValue;
 
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return defaultValue; // Return default if parsing fails
         }
     }

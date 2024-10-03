@@ -48,3 +48,5 @@ build/
 /fetch-data/java/lib/fetch-data-1.0-SNAPSHOT.jar
 /ipo-data-scrapper/ipo-data-scrapper.zip
 /fetch-data/ipo-fetch-data.zip
+/ipo-invest.zip
+/java/lib/ipo-invest-1.0-SNAPSHOT-shaded.pom
