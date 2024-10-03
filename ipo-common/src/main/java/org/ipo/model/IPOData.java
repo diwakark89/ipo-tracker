@@ -1,18 +1,13 @@
 package org.ipo.model;
 
-import software.amazon.awssdk.enhanced.dynamodb.extensions.annotations.DynamoDbAtomicCounter;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
-
-import java.util.Objects;
 
 @DynamoDbBean
 public class IPOData {
 
-    private String ipoId;
-    private String status;
+    private String ipoStatus;
     private String ipoName;
     private int price;
     private int gmp;
@@ -24,26 +19,38 @@ public class IPOData {
     private String boaDate;
     private String listingDate;
 
+    // No-argument constructor
+    public IPOData() {
+    }
+
+    // Constructor with all fields
+    public IPOData(String ipoStatus, String ipoName, int price, int gmp, int estListing, double ipoSize, int lot,
+            String openDt, String closeDt, String boaDate, String listingDate) {
+        this.ipoStatus = ipoStatus;
+        this.ipoName = ipoName;
+        this.price = price;
+        this.gmp = gmp;
+        this.estListing = estListing;
+        this.ipoSize = ipoSize;
+        this.lot = lot;
+        this.openDt = openDt;
+        this.closeDt = closeDt;
+        this.boaDate = boaDate;
+        this.listingDate = listingDate;
+    }
+
+    // Getter and Setter methods
+
+    @DynamoDbAttribute("ipoStatus")
+    public String getIpoStatus() {
+        return ipoStatus;
+    }
+
+    public void setIpoStatus(String ipoStatus) {
+        this.ipoStatus = ipoStatus;
+    }
+
     @DynamoDbPartitionKey
-    @DynamoDbAttribute("ipoId")
-    @DynamoDbAtomicCounter
-    public String getIpoId() {
-        return ipoId;
-    }
-
-    public void setIpoId(String ipoId) {
-        this.ipoId = ipoId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    @DynamoDbSortKey
     @DynamoDbAttribute("ipoName")
     public String getIpoName() {
         return ipoName;
@@ -53,6 +60,7 @@ public class IPOData {
         this.ipoName = ipoName;
     }
 
+    @DynamoDbAttribute("price")
     public int getPrice() {
         return price;
     }
@@ -61,6 +69,7 @@ public class IPOData {
         this.price = price;
     }
 
+    @DynamoDbAttribute("gmp")
     public int getGmp() {
         return gmp;
     }
@@ -69,6 +78,7 @@ public class IPOData {
         this.gmp = gmp;
     }
 
+    @DynamoDbAttribute("estListing")
     public int getEstListing() {
         return estListing;
     }
@@ -77,6 +87,7 @@ public class IPOData {
         this.estListing = estListing;
     }
 
+    @DynamoDbAttribute("ipoSize")
     public double getIpoSize() {
         return ipoSize;
     }
@@ -85,6 +96,7 @@ public class IPOData {
         this.ipoSize = ipoSize;
     }
 
+    @DynamoDbAttribute("lot")
     public int getLot() {
         return lot;
     }
@@ -93,6 +105,7 @@ public class IPOData {
         this.lot = lot;
     }
 
+    @DynamoDbAttribute("openDt")
     public String getOpenDt() {
         return openDt;
     }
@@ -101,6 +114,7 @@ public class IPOData {
         this.openDt = openDt;
     }
 
+    @DynamoDbAttribute("closeDt")
     public String getCloseDt() {
         return closeDt;
     }
@@ -109,6 +123,7 @@ public class IPOData {
         this.closeDt = closeDt;
     }
 
+    @DynamoDbAttribute("boaDate")
     public String getBoaDate() {
         return boaDate;
     }
@@ -117,6 +132,7 @@ public class IPOData {
         this.boaDate = boaDate;
     }
 
+    @DynamoDbAttribute("listingDate")
     public String getListingDate() {
         return listingDate;
     }
@@ -125,34 +141,80 @@ public class IPOData {
         this.listingDate = listingDate;
     }
 
-    @Override
-    public String toString() {
-        return "IPOData{" +
-                "boaDate='" + getBoaDate() + '\'' +
-                ", closeDt='" + getCloseDt() + '\'' +
-                ", estListing=" + getEstListing() +
-                ", gmp=" + getGmp() +
-                ", ipoId='" + getIpoId() + '\'' +
-                ", ipoName='" + getIpoName() + '\'' +
-                ", ipoSize=" + getIpoSize() +
-                ", listingDate='" + getListingDate() + '\'' +
-                ", lot=" + getLot() +
-                ", openDt='" + getOpenDt() + '\'' +
-                ", price=" + getPrice() +
-                ", status='" + getStatus() + '\'' +
-                '}';
-    }
+    // Builder class for constructing IPOData instances
+    public static class Builder {
+        private String ipoStatus;
+        private String ipoName;
+        private int price;
+        private int gmp;
+        private int estListing;
+        private double ipoSize;
+        private int lot;
+        private String openDt;
+        private String closeDt;
+        private String boaDate;
+        private String listingDate;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        IPOData ipoData = (IPOData) o;
-        return getPrice() == ipoData.getPrice() && getGmp() == ipoData.getGmp() && getEstListing() == ipoData.getEstListing() && Double.compare(getIpoSize(), ipoData.getIpoSize()) == 0 && getLot() == ipoData.getLot() && Objects.equals(getIpoId(), ipoData.getIpoId()) && Objects.equals(getStatus(), ipoData.getStatus()) && Objects.equals(getIpoName(), ipoData.getIpoName()) && Objects.equals(getOpenDt(), ipoData.getOpenDt()) && Objects.equals(getCloseDt(), ipoData.getCloseDt()) && Objects.equals(getBoaDate(), ipoData.getBoaDate()) && Objects.equals(getListingDate(), ipoData.getListingDate());
-    }
+        public Builder() {}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getIpoId(), getStatus(), getIpoName(), getPrice(), getGmp(), getEstListing(), getIpoSize(), getLot(), getOpenDt(), getCloseDt(), getBoaDate(), getListingDate());
+        public Builder ipoStatus(String ipoStatus) {
+            this.ipoStatus = ipoStatus;
+            return this;
+        }
+
+        public Builder ipoName(String ipoName) {
+            this.ipoName = ipoName;
+            return this;
+        }
+
+        public Builder price(int price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder gmp(int gmp) {
+            this.gmp = gmp;
+            return this;
+        }
+
+        public Builder estListing(int estListing) {
+            this.estListing = estListing;
+            return this;
+        }
+
+        public Builder ipoSize(double ipoSize) {
+            this.ipoSize = ipoSize;
+            return this;
+        }
+
+        public Builder lot(int lot) {
+            this.lot = lot;
+            return this;
+        }
+
+        public Builder openDt(String openDt) {
+            this.openDt = openDt;
+            return this;
+        }
+
+        public Builder closeDt(String closeDt) {
+            this.closeDt = closeDt;
+            return this;
+        }
+
+        public Builder boaDate(String boaDate) {
+            this.boaDate = boaDate;
+            return this;
+        }
+
+        public Builder listingDate(String listingDate) {
+            this.listingDate = listingDate;
+            return this;
+        }
+
+        public IPOData build() {
+            return new IPOData(ipoStatus, ipoName, price, gmp, estListing, ipoSize, lot, openDt, closeDt, boaDate, listingDate);
+        }
     }
 }
+

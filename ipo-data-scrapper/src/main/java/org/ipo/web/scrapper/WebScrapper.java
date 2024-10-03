@@ -1,6 +1,6 @@
 package org.ipo.web.scrapper;
 
-import org.ipo.web.scrapper.model.IPOTableData;
+import org.ipo.model.IPOTableData;
 
 import java.util.List;
 

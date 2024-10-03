@@ -1,38 +1,36 @@
-package org.ipo.web.lambda;
+package org.ipo.web.scrapper;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import org.ipo.log.LogTracker;
 import org.ipo.model.IPOData;
 import org.ipo.web.constant.IPOStatus;
 import org.ipo.web.db.DBStorage;
-import org.ipo.web.db.DataTransformer;
-import org.ipo.web.scrapper.WebScrapper;
-import org.ipo.web.scrapper.WebScrapperImpl;
-import org.ipo.web.scrapper.model.IPOTableData;
+import org.ipo.db.DataTransformer;
+import org.ipo.model.IPOTableData;
 import org.ipo.web.scrapper.util.DataCleaner;
 import org.ipo.web.scrapper.util.FilterData;
+import org.ipo.web.scrapper.util.LambdaEnv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
-public class WebScrapperLambda implements RequestHandler<Map<String, String>, String>  {
+import static org.ipo.db.DBConstant.STATUS;
 
-    private static final Logger LOG = LoggerFactory.getLogger(WebScrapperLambda.class);
-    public static final String STATUS = "STATUS";
+public class WebScrapperService implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(WebScrapperService.class);
 
     private final WebScrapper scrapper;
     private final DBStorage dbStorage;
     private final DataTransformer transformer;
 
-    private static final String WEBSITE_CURRENT_URL = "https://www.investorgain.com/report/live-ipo-gmp/331/current/";
-    private static final String WEBSITE_CLOSE_URL = "https://www.investorgain.com/report/live-ipo-gmp/331/close/";
-    private static final String WEBSITE_LISTED_URL = "https://www.investorgain.com/report/live-ipo-gmp/331/close/";
-    private static final String WEBSITE_UPCOMING_URL = "https://www.investorgain.com/report/live-ipo-gmp/331/close/";
 
-
-    public WebScrapperLambda() {
+    public WebScrapperService() {
         dbStorage = new DBStorage();
         DataCleaner dataCleaner = new DataCleaner();
         FilterData filterData = new FilterData();
@@ -41,27 +39,32 @@ public class WebScrapperLambda implements RequestHandler<Map<String, String>, St
     }
 
     @Override
-    public String handleRequest(Map<String, String> event, Context context) {
-        // Extracting the STATUS from the event
-        String status = event.getOrDefault(STATUS, "Current");
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent requestEvent, Context context) {
+        APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
 
-        String message;
         try {
+
+            String status = requestEvent.getQueryStringParameters().get(STATUS);
+            LogTracker.info("Data scrapping started for: " + status);
+
             scrapData(status);
-            message = "Successful";
-        } catch (Exception ex) {
-            message = ex.getMessage();
+            LogTracker.info("Completed the request");
+        }
+        catch (Exception ex) {
+            String message = String.format("Exception occurred %s", ex.getMessage());
+            LogTracker.error(message);
+            LOG.error(message, ex);
         }
 
-        return message;
+        return responseEvent.withStatusCode(200).withBody(LogTracker.buildResponse());
     }
 
 
     public void scrapData(String ipoStatus) {
-        try{
+        try {
             IPOStatus status = IPOStatus.fromString(ipoStatus);
 
-            List<IPOTableData> ipoList = scrapper.tableScrap(getURL(status), status.name());
+            List<IPOTableData> ipoList = scrapper.tableScrap(LambdaEnv.getURL(status), status.name());
 
             LOG.info("Data found from scrap: {}", ipoList.size());
             List<IPOData> ipoDataList = transformer.convertScrapToDBData(ipoList);
@@ -69,30 +72,14 @@ public class WebScrapperLambda implements RequestHandler<Map<String, String>, St
             dbStorage.saveDataToDB(ipoDataList);
 
             LOG.info("All Data Stored ");
-        }catch (Exception ex){
-            LOG.error("Exception occurred : {}",ex.getMessage(),ex);
+        }
+        catch (Exception ex) {
+            String message = String.format("Exception occurred %s", ex.getMessage());
+            LogTracker.error(message);
+            LOG.error(message, ex);
         }
 
     }
 
-    private String getURL(IPOStatus ipoStatus) {
-        switch (ipoStatus) {
-            case CURRENT -> {
-                return WEBSITE_CURRENT_URL;
-            }
-            case CLOSED -> {
-                return WEBSITE_CLOSE_URL;
-            }
-            case LISTED -> {
-                return WEBSITE_LISTED_URL;
-            }
-            case UPCOMING -> {
-                return WEBSITE_UPCOMING_URL;
-            }
-            default -> {
-                return "Wrong";
-            }
-        }
-    }
 
 }

@@ -1,6 +1,7 @@
 package org.ipo.web.scrapper;
 
-import org.ipo.web.scrapper.model.IPOTableData;
+import org.ipo.log.LogTracker;
+import org.ipo.model.IPOTableData;
 import org.ipo.web.scrapper.util.DataCleaner;
 import org.ipo.web.scrapper.util.FilterData;
 import org.jsoup.Jsoup;
@@ -57,11 +58,11 @@ public class WebScrapperImpl implements WebScrapper{
                     dataList.add(data);
                     data.setStatus(status);
                 }
-                LOG.info("{}", data);
-
             }
-        } catch (IOException e) {
-          LOG.error("Unable to extract string due",e);
+        } catch (IOException ex) {
+            String message = String.format("Unable to extract string due: %s", ex.getMessage());
+            LogTracker.error(message);
+            LOG.error(message, ex);
         }
         return dataList;
     }
