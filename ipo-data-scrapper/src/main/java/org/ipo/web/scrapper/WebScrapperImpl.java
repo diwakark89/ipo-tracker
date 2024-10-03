@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WebScrapperImpl implements WebScrapper{
+public class WebScrapperImpl implements WebScrapper {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(WebScrapperImpl.class);
@@ -23,15 +23,14 @@ public class WebScrapperImpl implements WebScrapper{
     private final DataCleaner dataCleaner;
     private final FilterData filterData;
 
-    public WebScrapperImpl(DataCleaner dataCleaner, FilterData filterData){
-
+    public WebScrapperImpl(DataCleaner dataCleaner, FilterData filterData) {
         this.dataCleaner = dataCleaner;
         this.filterData = filterData;
     }
 
     @Override
     public List<IPOTableData> tableScrap(String url, String status) {
-        List<IPOTableData> dataList=new ArrayList<>();
+        List<IPOTableData> dataList = new ArrayList<>();
         try {
 
             // Connect to the website and get the HTML document
@@ -49,12 +48,12 @@ public class WebScrapperImpl implements WebScrapper{
             for (Element row : rows) {
                 // Get all cells (td elements) in the row
                 Elements cells = row.select("td");
-                IPOTableData data=new IPOTableData();
+                IPOTableData data = new IPOTableData();
                 // Iterate through each cell and print the text
-                for(int i=0 ; i<cells.size(); i++){
-                   setDataBean(i, cells.get(i),data);
+                for (int i = 0; i < cells.size(); i++) {
+                    setDataBean(i, cells.get(i), data);
                 }
-                if(filterData.shouldItBeAdded(data)){
+                if (filterData.shouldItBeAdded(data)) {
                     dataList.add(data);
                     data.setStatus(status);
                 }
@@ -67,11 +66,12 @@ public class WebScrapperImpl implements WebScrapper{
         return dataList;
     }
 
-    private void setDataBean(int i, Element element,IPOTableData data) {
+    private void setDataBean(int i, Element element, IPOTableData data) {
 
-        switch (i){
+        switch (i) {
             case 0:
                 data.setIpoName(dataCleaner.cleanData(i, new StringBuilder(element.text())));
+                data.setListedPrice(dataCleaner.extractListedPrice(element));
                 break;
             case 1:
                 data.setPrice(dataCleaner.cleanData(i, new StringBuilder(element.text())));
@@ -100,7 +100,7 @@ public class WebScrapperImpl implements WebScrapper{
             case 10:
                 data.setListingDate(dataCleaner.cleanData(i, new StringBuilder(element.text())));
                 break;
-            case 4,11:
+            case 4, 11:
                 break;
             default:
                 LOG.info("Exceed the Range fix it");

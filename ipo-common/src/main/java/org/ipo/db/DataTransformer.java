@@ -21,7 +21,6 @@ public class DataTransformer {
         IPOData.Builder builder = new IPOData.Builder();
         IPOData ipoData = null;
         try {
-
             ipoData = builder
                     .ipoName(data.getIpoName())
                     .price(parseIntOrDefault(data.getPrice(), 0))
@@ -32,9 +31,10 @@ public class DataTransformer {
                     .closeDt(data.getCloseDt())
                     .boaDate(data.getBoaDate())
                     .listingDate(data.getListingDate())
-                    .ipoSize(parseDoubleOrDefault(data.getListingDate(), 0.0))
+                    .ipoSize(parseDoubleOrDefault(data.getIpoSize(), 0.0))
                     .ipoStatus(data.getStatus())
                     .updateDate(LocalDateTime.now().toString())
+                    .listedPrice(parseDoubleOrDefault(data.getListedPrice(), 0.0))
                     .build();
 
             LOG.info("Data transformed: {}", ipoData);

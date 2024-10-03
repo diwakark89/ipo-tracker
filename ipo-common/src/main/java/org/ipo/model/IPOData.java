@@ -19,6 +19,7 @@ public class IPOData {
     private String boaDate;
     private String listingDate;
     private String updateDate;
+    private double listedPrice;
 
     // No-argument constructor
     public IPOData() {
@@ -26,7 +27,7 @@ public class IPOData {
 
     // Constructor with all fields
     public IPOData(String ipoStatus, String ipoName, int price, int gmp, int estListing, double ipoSize, int lot,
-                   String openDt, String closeDt, String boaDate, String listingDate, String updateDate) {
+                   String openDt, String closeDt, String boaDate, String listingDate, String updateDate, double listedPrice) {
         this.ipoStatus = ipoStatus;
         this.ipoName = ipoName;
         this.price = price;
@@ -39,6 +40,7 @@ public class IPOData {
         this.boaDate = boaDate;
         this.listingDate = listingDate;
         this.updateDate = updateDate;
+        this.listedPrice = listedPrice;
     }
 
     // Getter and Setter methods
@@ -152,6 +154,15 @@ public class IPOData {
         this.updateDate = updateDate;
     }
 
+    @DynamoDbAttribute("listedPrice")
+    public double getListedPrice() {
+        return listedPrice;
+    }
+
+    public void setListedPrice(double listedPrice) {
+        this.listedPrice = listedPrice;
+    }
+
     // Builder class for constructing IPOData instances
     public static class Builder {
         private String ipoStatus;
@@ -166,6 +177,7 @@ public class IPOData {
         private String boaDate;
         private String listingDate;
         private String updateDate;
+        private double listedPrice;
 
         public Builder() {
         }
@@ -230,8 +242,13 @@ public class IPOData {
             return this;
         }
 
+        public Builder listedPrice(double listedPrice) {
+            this.listedPrice = listedPrice;
+            return this;
+        }
+
         public IPOData build() {
-            return new IPOData(ipoStatus, ipoName, price, gmp, estListing, ipoSize, lot, openDt, closeDt, boaDate, listingDate, updateDate);
+            return new IPOData(ipoStatus, ipoName, price, gmp, estListing, ipoSize, lot, openDt, closeDt, boaDate, listingDate, updateDate, listedPrice);
         }
     }
 
@@ -245,6 +262,7 @@ public class IPOData {
                 ", ipoName='" + getIpoName() + '\'' +
                 ", ipoSize=" + getIpoSize() +
                 ", ipoStatus='" + getIpoStatus() + '\'' +
+                ", listedPrice=" + getListedPrice() +
                 ", listingDate='" + getListingDate() + '\'' +
                 ", lot=" + getLot() +
                 ", openDt='" + getOpenDt() + '\'' +

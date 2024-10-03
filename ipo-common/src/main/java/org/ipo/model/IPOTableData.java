@@ -3,7 +3,6 @@ package org.ipo.model;
 import java.util.Objects;
 
 public class IPOTableData {
-    private String ipoId;
     private String status;
     private String ipoName;
     private String price;
@@ -15,14 +14,7 @@ public class IPOTableData {
     private String closeDt;
     private String boaDate;
     private String listingDate;
-
-    public String getIpoId() {
-        return ipoId;
-    }
-
-    public void setIpoId(String ipoId) {
-        this.ipoId = ipoId;
-    }
+    private String listedPrice;
 
     public String getStatus() {
         return status;
@@ -112,24 +104,42 @@ public class IPOTableData {
         this.listingDate = listingDate;
     }
 
+    public String getListedPrice() {
+        return listedPrice;
+    }
+
+    public void setListedPrice(String listedPrice) {
+        this.listedPrice = listedPrice;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof IPOTableData data)) {
-            return false;
-        }
-        return Objects.equals(getIpoId(), data.getIpoId()) && Objects.equals(getStatus(), data.getStatus()) && Objects.equals(getIpoName(), data.getIpoName()) && Objects.equals(getPrice(), data.getPrice()) && Objects.equals(getGmp(), data.getGmp()) && Objects.equals(getEstListing(), data.getEstListing()) && Objects.equals(getIpoSize(), data.getIpoSize()) && Objects.equals(getLot(), data.getLot()) && Objects.equals(getOpenDt(), data.getOpenDt()) && Objects.equals(getCloseDt(), data.getCloseDt()) && Objects.equals(getBoaDate(), data.getBoaDate()) && Objects.equals(getListingDate(), data.getListingDate());
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IPOTableData that = (IPOTableData) o;
+        return Objects.equals(getStatus(), that.getStatus()) && Objects.equals(getIpoName(), that.getIpoName()) && Objects.equals(getPrice(), that.getPrice()) && Objects.equals(getGmp(), that.getGmp()) && Objects.equals(getEstListing(), that.getEstListing()) && Objects.equals(getIpoSize(), that.getIpoSize()) && Objects.equals(getLot(), that.getLot()) && Objects.equals(getOpenDt(), that.getOpenDt()) && Objects.equals(getCloseDt(), that.getCloseDt()) && Objects.equals(getBoaDate(), that.getBoaDate()) && Objects.equals(getListingDate(), that.getListingDate()) && Objects.equals(getListedPrice(), that.getListedPrice());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIpoId(), getStatus(), getIpoName(), getPrice(), getGmp(), getEstListing(), getIpoSize(), getLot(), getOpenDt(), getCloseDt(), getBoaDate(), getListingDate());
+        return Objects.hash(getStatus(), getIpoName(), getPrice(), getGmp(), getEstListing(), getIpoSize(), getLot(), getOpenDt(), getCloseDt(), getBoaDate(), getListingDate(), getListedPrice());
     }
 
     @Override
     public String toString() {
-        return "IPOTableData{" + "ipoId='" + ipoId + '\'' + ", ipoStatus='" + status + '\'' + ", ipoName='" + ipoName + '\'' + ", price='" + price + '\'' + ", gmp='" + gmp + '\'' + ", estListing='" + estListing + '\'' + ", ipoSize='" + ipoSize + '\'' + ", lot='" + lot + '\'' + ", openDt='" + openDt + '\'' + ", closeDt='" + closeDt + '\'' + ", boaDate='" + boaDate + '\'' + ", listingDate='" + listingDate + '\'' + '}';
+        return "IPOTableData{" +
+                "boaDate='" + getBoaDate() + '\'' +
+                ", closeDt='" + getCloseDt() + '\'' +
+                ", estListing='" + getEstListing() + '\'' +
+                ", gmp='" + getGmp() + '\'' +
+                ", ipoName='" + getIpoName() + '\'' +
+                ", ipoSize='" + getIpoSize() + '\'' +
+                ", listedPrice='" + getListedPrice() + '\'' +
+                ", listingDate='" + getListingDate() + '\'' +
+                ", lot='" + getLot() + '\'' +
+                ", openDt='" + getOpenDt() + '\'' +
+                ", price='" + getPrice() + '\'' +
+                ", status='" + getStatus() + '\'' +
+                '}';
     }
 }

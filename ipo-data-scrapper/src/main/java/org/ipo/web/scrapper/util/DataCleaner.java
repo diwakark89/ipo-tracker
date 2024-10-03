@@ -3,6 +3,8 @@ package org.ipo.web.scrapper.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.jsoup.nodes.Element;
+
 public class DataCleaner {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataCleaner.class);
@@ -25,8 +27,7 @@ public class DataCleaner {
                     yield trim(text);
                 }
             };
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             LOG.error("Exception occurred with {}:{}", i, text, ex);
             return text.toString();
         }
@@ -53,6 +54,10 @@ public class DataCleaner {
         return removeNull(text);
     }
 
+    private String cleanPrice(StringBuilder text) {
+        return removeNull(text);
+    }
+
     private String removeNull(StringBuilder text) {
         replaceString(text, "null");
 
@@ -63,17 +68,20 @@ public class DataCleaner {
         replaceString(text, "null");
         removeString(text, "Cr");
         replaceString(text, "₹");
-
         return trim(text);
     }
 
     private String cleanEstListingPrice(StringBuilder text) {
         replaceString(text, "null");
         removeString(text, "(");
-
-
         return trim(text);
     }
+
+    private String cleanListedPrice(StringBuilder text) {
+        replaceString(text, "L@");
+        return trim(text);
+    }
+
 
     private String cleanIPOName(StringBuilder text) {
         removeString(text, "Open");
@@ -83,19 +91,12 @@ public class DataCleaner {
         replaceString(text, "null");
 
         removeStringPart(text, "Close");
-        removeStringPart(text,"[email");
-        removeStringPart(text,"Listing Today");
-
-
-        return trim(text);
-    }
-
-
-    private String cleanPrice(StringBuilder text) {
-        replaceString(text, "null");
+        removeStringPart(text, "[email");
+        removeStringPart(text, "Listing Today");
 
         return trim(text);
     }
+
 
     public String cleanGMP(StringBuilder text) {
         removeString(text, "--");
@@ -137,5 +138,28 @@ public class DataCleaner {
         if (index != -1) {
             text.delete(index, text.length());
         }
+    }
+
+    public String extractListedPrice(Element element) {
+        StringBuilder decodedEmail=new StringBuilder();
+        Element emailElement = element.selectFirst("span.__cf_email__");
+        if (emailElement != null) {
+            String obfuscatedListedPrice = emailElement.attr("data-cfemail");
+            decodedEmail = decodeCloudflareListedPrice(obfuscatedListedPrice);
+        }
+
+        return cleanListedPrice(decodedEmail);
+    }
+
+    private StringBuilder decodeCloudflareListedPrice(String obfuscatedListedPrice) {
+        int key = Integer.parseInt(obfuscatedListedPrice.substring(0, 2), 16);
+        StringBuilder listedPrice = new StringBuilder();
+
+        for (int i = 2; i < obfuscatedListedPrice.length(); i += 2) {
+            int hex = Integer.parseInt(obfuscatedListedPrice.substring(i, i + 2), 16);
+            listedPrice.append((char) (hex ^ key));
+        }
+
+        return listedPrice;
     }
 }
