@@ -2,33 +2,34 @@ package org.ipo.web.scrapper.util;
 
 import org.ipo.web.constant.IPOStatus;
 
-public class LambdaEnv {
-    private static final String websiteCurrentUrl ;
-    private static final String websiteClosedUrl;
-    private static final String websiteListedUrl;
-    private static final String websiteUpcomingUrl;
+public final class LambdaEnv {
+    private static final String WEBSITE_CURRENT_URL;
+    private static final String WEBSITE_CLOSED_URL;
+    private static final String WEBSITE_LISTED_URL;
+    private static final String WEBSITE_UPCOMING_URL;
+    private LambdaEnv(){}
 
     static {
-        websiteCurrentUrl = System.getenv("CURRENT");
-        websiteClosedUrl = System.getenv("CLOSED");
-        websiteListedUrl = System.getenv("LISTED");
-        websiteUpcomingUrl = System.getenv("UPCOMING");
+        WEBSITE_CURRENT_URL = System.getenv("CURRENT");
+        WEBSITE_CLOSED_URL = System.getenv("CLOSED");
+        WEBSITE_LISTED_URL = System.getenv("LISTED");
+        WEBSITE_UPCOMING_URL = System.getenv("UPCOMING");
     }
 
 
     public static String getURL(IPOStatus ipoStatus) {
         switch (ipoStatus) {
             case CURRENT -> {
-                return websiteCurrentUrl;
+                return WEBSITE_CURRENT_URL;
             }
             case CLOSED -> {
-                return websiteClosedUrl;
+                return WEBSITE_CLOSED_URL;
             }
             case LISTED -> {
-                return websiteListedUrl;
+                return WEBSITE_LISTED_URL;
             }
             case UPCOMING -> {
-                return websiteUpcomingUrl;
+                return WEBSITE_UPCOMING_URL;
             }
             default -> {
                 return "Wrong IPO Status";

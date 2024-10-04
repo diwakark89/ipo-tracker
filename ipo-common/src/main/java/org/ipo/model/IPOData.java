@@ -4,6 +4,8 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttri
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
+import java.util.Objects;
+
 @DynamoDbBean
 public class IPOData {
 
@@ -163,6 +165,19 @@ public class IPOData {
         this.listedPrice = listedPrice;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IPOData ipoData = (IPOData) o;
+        return getPrice() == ipoData.getPrice() && getGmp() == ipoData.getGmp() && getEstListing() == ipoData.getEstListing() && Double.compare(getIpoSize(), ipoData.getIpoSize()) == 0 && getLot() == ipoData.getLot() && Double.compare(getListedPrice(), ipoData.getListedPrice()) == 0 && Objects.equals(getIpoStatus(), ipoData.getIpoStatus()) && Objects.equals(getIpoName(), ipoData.getIpoName()) && Objects.equals(getOpenDt(), ipoData.getOpenDt()) && Objects.equals(getCloseDt(), ipoData.getCloseDt()) && Objects.equals(getBoaDate(), ipoData.getBoaDate()) && Objects.equals(getListingDate(), ipoData.getListingDate()) && Objects.equals(getUpdateDate(), ipoData.getUpdateDate());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIpoStatus(), getIpoName(), getPrice(), getGmp(), getEstListing(), getIpoSize(), getLot(), getOpenDt(), getCloseDt(), getBoaDate(), getListingDate(), getUpdateDate(), getListedPrice());
+    }
+
     // Builder class for constructing IPOData instances
     public static class Builder {
         private String ipoStatus;
@@ -270,5 +285,7 @@ public class IPOData {
                 ", updateDate='" + getUpdateDate() + '\'' +
                 '}';
     }
+
+
 }
 

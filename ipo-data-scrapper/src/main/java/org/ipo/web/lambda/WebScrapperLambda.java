@@ -8,16 +8,18 @@ import org.ipo.model.IPOData;
 import org.ipo.model.IPOTableData;
 import org.ipo.web.constant.IPOStatus;
 import org.ipo.web.db.DBStorage;
+import org.ipo.web.model.DataStore;
 import org.ipo.web.scrapper.WebScrapper;
 import org.ipo.web.scrapper.WebScrapperImpl;
 import org.ipo.web.scrapper.util.DataCleaner;
 import org.ipo.web.scrapper.util.FilterData;
 import org.ipo.web.scrapper.util.LambdaEnv;
+import org.ipo.web.service.YAMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class WebScrapperLambda implements RequestHandler<Map<String, String>, String> {
 
@@ -26,9 +28,10 @@ public class WebScrapperLambda implements RequestHandler<Map<String, String>, St
     private final WebScrapper scrapper;
     private final DBStorage dbStorage;
     private final DataTransformer transformer;
+    private final YAMLWriter yamlWriter;
 
-
-    public WebScrapperLambda() {
+    public WebScrapperLambda(YAMLWriter yamlWriter) {
+        this.yamlWriter = yamlWriter;
         dbStorage = new DBStorage();
         DataCleaner dataCleaner = new DataCleaner();
         FilterData filterData = new FilterData();
@@ -38,7 +41,6 @@ public class WebScrapperLambda implements RequestHandler<Map<String, String>, St
 
     @Override
     public String handleRequest(Map<String, String> event, Context context) {
-
         try {
 
             String status = event.getOrDefault("STATUS", "Current");
@@ -63,8 +65,13 @@ public class WebScrapperLambda implements RequestHandler<Map<String, String>, St
             List<IPOTableData> ipoList = scrapper.tableScrap(LambdaEnv.getURL(status), status.name());
 
             LOG.info("Data found from scrap: {}", ipoList.size());
-            List<IPOData> ipoDataList = transformer.convertScrapToDBData(ipoList);
-            LOG.info("Data Transformed ");
+            DataStore dataStore = yamlWriter.readYaml(ipoStatus);
+
+            List<IPOData> ipoDataList = trimList(dataStore, transformer.convertScrapToDBData(ipoList));
+            LOG.info("Status: {}, Data count: {}, ", ipoStatus, ipoDataList);
+            dataStore.ipoData().addAll(ipoDataList);
+            yamlWriter.writeToYaml(ipoStatus, dataStore);
+
             dbStorage.saveDataToDB(ipoDataList);
 
         } catch (Exception ex) {
@@ -73,6 +80,14 @@ public class WebScrapperLambda implements RequestHandler<Map<String, String>, St
             LOG.error(message, ex);
         }
 
+    }
+
+    public List<IPOData> trimList(DataStore dataStore, List<IPOData> ipoDataList){
+        if(dataStore.ipoData().isEmpty()){
+            return Collections.emptyList();
+        }
+        Set<IPOData> ipoDataSet = dataStore.ipoData();
+        return ipoDataList.parallelStream().filter(ipoData -> !ipoDataSet.contains(ipoData)).toList();
     }
 
 

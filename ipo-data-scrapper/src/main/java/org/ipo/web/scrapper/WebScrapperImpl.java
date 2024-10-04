@@ -17,7 +17,6 @@ import java.util.List;
 
 public class WebScrapperImpl implements WebScrapper {
 
-
     private static final Logger LOG = LoggerFactory.getLogger(WebScrapperImpl.class);
 
     private final DataCleaner dataCleaner;
