@@ -18,8 +18,10 @@ import org.ipo.web.service.YAMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class WebScrapperLambda implements RequestHandler<Map<String, String>, String> {
 
@@ -29,9 +31,10 @@ public class WebScrapperLambda implements RequestHandler<Map<String, String>, St
     private final DBStorage dbStorage;
     private final DataTransformer transformer;
     private final YAMLWriter yamlWriter;
+    private static final String FILE_NAME = "IPO_Data.yml";
 
-    public WebScrapperLambda(YAMLWriter yamlWriter) {
-        this.yamlWriter = yamlWriter;
+    public WebScrapperLambda() {
+        this.yamlWriter = new YAMLWriter();
         dbStorage = new DBStorage();
         DataCleaner dataCleaner = new DataCleaner();
         FilterData filterData = new FilterData();
@@ -65,12 +68,12 @@ public class WebScrapperLambda implements RequestHandler<Map<String, String>, St
             List<IPOTableData> ipoList = scrapper.tableScrap(LambdaEnv.getURL(status), status.name());
 
             LOG.info("Data found from scrap: {}", ipoList.size());
-            DataStore dataStore = yamlWriter.readYaml(ipoStatus);
+            DataStore dataStore = yamlWriter.readYaml(ipoStatus, FILE_NAME);
 
             List<IPOData> ipoDataList = trimList(dataStore, transformer.convertScrapToDBData(ipoList));
-            LOG.info("Status: {}, Data count: {}, ", ipoStatus, ipoDataList);
+            LOG.info("Status: {}, Data count: {}, ", ipoStatus, ipoDataList.size());
             dataStore.ipoData().addAll(ipoDataList);
-            yamlWriter.writeToYaml(ipoStatus, dataStore);
+            yamlWriter.writeToYaml(ipoStatus,FILE_NAME, dataStore);
 
             dbStorage.saveDataToDB(ipoDataList);
 
@@ -84,7 +87,7 @@ public class WebScrapperLambda implements RequestHandler<Map<String, String>, St
 
     public List<IPOData> trimList(DataStore dataStore, List<IPOData> ipoDataList){
         if(dataStore.ipoData().isEmpty()){
-            return Collections.emptyList();
+            return ipoDataList;
         }
         Set<IPOData> ipoDataSet = dataStore.ipoData();
         return ipoDataList.parallelStream().filter(ipoData -> !ipoDataSet.contains(ipoData)).toList();

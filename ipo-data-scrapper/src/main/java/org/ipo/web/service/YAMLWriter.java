@@ -10,85 +10,107 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.time.Duration;
-import java.time.Instant;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 
 public class YAMLWriter {
     private static final Logger LOG = LoggerFactory.getLogger(YAMLWriter.class);
     private final ObjectMapper mapper;
 
-    private static final String FILE_NAME = "IPO_Data.yml";
     private final long maxFileAgeDays;
 
+    private final String baseFolder;
+
+
+    // Original constructor
     public YAMLWriter() {
-        mapper = new ObjectMapper(new YAMLFactory());
-        this.mapper.findAndRegisterModules();
-        this.maxFileAgeDays = Long.parseLong(System.getenv("FILE_AGE"));
+        this(System.getenv("FILE_AGE"), new ObjectMapper(new YAMLFactory()),"tmp"); // Default to reading from the environment variable
     }
 
-    public void createYamlFile(String folderPath) {
-        try {
-            // Create folder if it doesn't exist
-            File folder = new File(folderPath);
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
-            File yamlFile = getFile(folderPath);
+    // New constructor for testability
+    public YAMLWriter(String maxFileAgeDays, ObjectMapper mapper,String baseFolder) {
+        this.mapper=mapper;
+        this.mapper.findAndRegisterModules();
+        this.maxFileAgeDays = Long.parseLong(maxFileAgeDays);
+        this.baseFolder=baseFolder;
+    }
 
-            if (yamlFile.exists()) {
-                if (isFileOlderThanDays(yamlFile)) {
-                    LOG.info("File is older than {} days. Deleting and creating a new file.", maxFileAgeDays);
-                    yamlFile.delete();
-                    yamlFile.createNewFile();
-                }
-            } else {
-                LOG.info("File does not exist. Creating a new file.");
-                yamlFile.createNewFile();
+    public void createYamlFile(String pathToYaml, String fileName) throws IOException {
+        Path yamlFilePath = Paths.get(pathToYaml, fileName);
+
+        if (Files.exists(yamlFilePath) ){
+            if(isOlderThanMaxDays(yamlFilePath)) {
+                Files.delete(yamlFilePath);
+                // Create a new YAML file
+                Files.createFile(yamlFilePath);
             }
-        } catch (IOException e) {
-            LOG.info("Not able to check file status due to:{}", e.getMessage(), e);
+            return;
         }
+
+        Files.createFile(yamlFilePath);
+
     }
 
     /**
      * Check if a file is older than a specified number of days.
      */
-    private boolean isFileOlderThanDays(File file) throws IOException {
-        Path filePath = file.toPath();
-        BasicFileAttributes attrs = Files.readAttributes(filePath, BasicFileAttributes.class);
-        Instant lastModifiedTime = attrs.lastModifiedTime().toInstant();
-        Instant currentTime = Instant.now();
-        Duration duration = Duration.between(lastModifiedTime, currentTime);
-
-        return duration.toSeconds() > maxFileAgeDays;
+    private boolean isOlderThanMaxDays(Path filePath) throws IOException {
+        LocalDate lastModifiedDate = Files.getLastModifiedTime(filePath).toInstant()
+                .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        return ChronoUnit.DAYS.between(lastModifiedDate, LocalDate.now()) > maxFileAgeDays;
     }
 
 
-    public DataStore readYaml(String status) {
-        File yamlFile = getFile(status);
+    public DataStore readYaml(String folderName, String fileName) {
+        LOG.info("Reading YAML for :{} ",folderName);
+        File yamlFile = getFile(folderName, fileName);
         try {
-            return mapper.readValue(yamlFile, DataStore.class);
+            if (yamlFile.exists()) {
+                return mapper.readValue(yamlFile, DataStore.class);
+            } else {
+                LOG.info("File does not exists:{} ", yamlFile.getAbsolutePath());
+                return new DataStore(new HashSet<>());
+            }
+
         } catch (IOException ex) {
             LOG.error("Not able to read file:{} due to : {}", yamlFile.getName(), ex.getMessage(), ex);
             return new DataStore(new HashSet<>());
         }
     }
 
-    public void writeToYaml(String status, DataStore dataStore) {
-        if(!status.equalsIgnoreCase("listed")){
-            createYamlFile(status);
-        }
-        File yamlFile = getFile(status);
+    public void writeToYaml(String folderName, String fileName, DataStore dataStore) {
+
         try {
+            String folderPath = getFolderPath(folderName);
+            createYamlFile(folderPath, fileName);
+            File yamlFile = getFile(folderName, fileName);
             mapper.writeValue(yamlFile, dataStore);
         } catch (IOException ex) {
-            LOG.error("Not able to write yamlFile:{} due to :{} ", yamlFile.getName(), ex.getMessage(), ex);
+            LOG.error("Not able to write yamlFile:{} due to :{} ", fileName, ex.getMessage(), ex);
         }
     }
 
-    private File getFile(String status) {
-        return  new File(status + File.separator + FILE_NAME);
+    private File getFile(String folderName, String fileName) {
+        String folderPath = getFolderPath(folderName);
+        createFolder(folderPath);
+        return new File(folderPath + File.separator + fileName);
     }
+
+    private void createFolder(String folderPath) {
+        File folder = new File(folderPath);
+
+        if (!folder.exists()) {
+            LOG.info("Creating Folder: {} it does not exists", folder.getAbsolutePath());
+            boolean mkdirs = folder.mkdirs();
+            LOG.info("Does folder: {}, has been created: {}",  folder.getAbsolutePath(), mkdirs);
+        }
+    }
+
+    private  String getFolderPath(String folderName) {
+        return baseFolder + File.separator + folderName;
+    }
+
+
 }

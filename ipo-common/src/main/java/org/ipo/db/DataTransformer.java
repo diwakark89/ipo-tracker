@@ -36,8 +36,6 @@ public class DataTransformer {
                     .updateDate(LocalDateTime.now().toString())
                     .listedPrice(parseDoubleOrDefault(data.getListedPrice(), 0.0))
                     .build();
-
-            LOG.info("Data transformed: {}", ipoData);
         } catch (Exception ex) {
             String message = String.format("Exception occurred while converting: %s due to: %s", data, ex.getMessage());
             LogTracker.error(message);
