@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  DataScrapperLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: org.ipo.web.lambda.WebScrapperLambda::handleRequest
+      Runtime: java21
+      CodeUri: target/ipo-data-scrapper-1.0-SNAPSHOT.jar
+      MemorySize: 128
+      Timeout: 120
+      Layers:
+        - arn:aws:lambda:ap-south-1:114646606773:layer:IPODataLayer:11
+      Environment:
+        Variables:
+          TABLE_NAME: "IPOData"  # Ensure this is set correctly to the name of your existing DynamoDB table
+          CLOSE: https://www.investorgain.com/report/live-ipo-gmp/331/close/
+          CURRENT: https://www.investorgain.com/report/live-ipo-gmp/331/current/
+          LISTED: https://www.investorgain.com/report/live-ipo-gmp/331/listed/
+          UPCOMING: https://www.investorgain.com/report/live-ipo-gmp/331/close/
+          FILE_AGE: 30
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: "IPOData"

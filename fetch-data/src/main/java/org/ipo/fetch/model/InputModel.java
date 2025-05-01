@@ -1,27 +1,27 @@
 package org.ipo.fetch.model;
 
 public class InputModel {
-    private String key;
-    private String value;
+    private String partitionKey;
+    private String sortValue;
 
-    public String getValue() {
-        return value;
+    public String getSortValue() {
+        return sortValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setSortValue(String sortValue) {
+        this.sortValue = sortValue;
     }
 
-    public String getKey() {
-        return key;
+    public String getPartitionKey() {
+        return partitionKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setPartitionKey(String partitionKey) {
+        this.partitionKey = partitionKey;
     }
 
     @Override
     public String toString() {
-        return "InputModel{key='" + key + '\'' + '}';
+        return "InputModel{key='" + partitionKey + '\'' + '}';
     }
 }

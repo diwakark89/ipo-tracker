@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum IPOStatus {
-    CURRENT("Current"),
-    UPCOMING("Upcoming"),
-    CLOSED("Closed"),
-    LISTED("Listed");
+    CURRENT("current"),
+    UPCOMING("upcoming"),
+    CLOSED("closed"),
+    LISTED("listed");
 
-    String status;
+    final String status;
 
     IPOStatus(String status){
         this.status=status;
@@ -27,7 +27,7 @@ public enum IPOStatus {
             }
         }
         // If not found, throw an IllegalArgumentException or return null
-        throw new IllegalArgumentException("No enum constant with status: " + status);
+        throw new IllegalArgumentException("No enum constant with ipoStatus: " + status);
     }
 
 }
